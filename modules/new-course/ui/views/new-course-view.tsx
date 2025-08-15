@@ -1,63 +1,57 @@
 "use client";
 
 import type React from "react";
-
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { BookOpen, FileText, Map, Sparkles, Send, Trash2 } from "lucide-react";
-import { useChat, UseChatOptions } from "ai/react";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
+import { PanelRight, Sparkles } from "lucide-react";
 
-type Format = "course" | "guide" | "roadmap";
+import { useCreateCourse } from "../../hooks/use-create-course";
+import AiQuestionsChat from "../components/ai-questions-chat";
+import Loader from "@/components/loader";
+import { Textarea } from "@/components/ui/textarea";
+import GetUserCourses from "@/components/courses/get-user-courses";
+import { useSidebar } from "@/components/ui/sidebar";
 
 export const NewCoursePageView = () => {
-  const [topic, setTopic] = useState("");
-  const [selectedFormat, setSelectedFormat] = useState<Format>("course");
-  const [enableQuestions, setEnableQuestions] = useState(false);
+  const {
+    topic,
+    setTopic,
+    selectedFormat,
+    setSelectedFormat,
+    enableQuestions,
+    setEnableQuestions,
+    handleCreateCourse,
+    formats,
+    questions,
+    disableCheckbox,
+    setDisableCheckbox,
+    setQuestions,
+    isLoading,
+    generateQuestionsByTopic,
+    messages,
+    setMessages,
+    input,
+    setInput,
+    currentQuestionIndex,
+    setCurrentQuestionIndex,
+    isComplete,
+    setIsComplete,
+    isPending,
+  } = useCreateCourse();
 
-  const { messages, input, handleInputChange, handleSubmit, isLoading } =
-    useChat({
-      api: "/api/chat",
-      initialMessages: [],
-      onFinish: () => {
-        // Chat finished
-      },
-    });
-
-  const handleCreateCourse = () => {
-    if (!topic) {
-      toast.error("Plase select the topic");
-      return;
-    }
-  };
-
-  const formats = [
-    {
-      id: "course" as Format,
-      name: "Course",
-      icon: BookOpen,
-      description: "Structured learning path",
-    },
-    {
-      id: "guide" as Format,
-      name: "Guide",
-      icon: FileText,
-      description: "Step-by-step instructions",
-    },
-    {
-      id: "roadmap" as Format,
-      name: "Roadmap",
-      icon: Map,
-      description: "Learning progression map",
-    },
-  ];
+  const { isMobile, toggleSidebar } = useSidebar();
   return (
-    <div className="min-h-screen mx-auto p-4">
+    <div className="min-h-screen mx-auto p-4 md:px-8 space-y-8">
+      {isMobile && (
+        <Button className="" variant={"outline"} onClick={toggleSidebar}>
+          <PanelRight />
+        </Button>
+      )}
+      {isPending && <Loader />}
       <div className="max-w-2xl mx-auto pt-8">
         <div className="text-center mb-8">
           <div className="flex items-center justify-center mb-4">
@@ -87,15 +81,15 @@ export const NewCoursePageView = () => {
                 <label className="block text-sm font-medium  mb-2">
                   What can I help you learn?
                 </label>
-                <Input
+                <Textarea
                   value={topic}
                   onChange={(e) => setTopic(e.target.value)}
                   placeholder="Enter a topic"
-                  className="w-full border border-gray-300"
+                  className=""
                   required
                 />
               </div>
-
+              {/* 
               <div>
                 <label className="block text-sm font-medium mb-3">
                   Choose the format
@@ -110,7 +104,7 @@ export const NewCoursePageView = () => {
                         onClick={() => setSelectedFormat(format.id)}
                         className={`p-4 border rounded-lg text-center transition-colors ${
                           selectedFormat === format.id
-                            ? "border-blue-500 bg-secondary-foreground"
+                            ? "border-blue-500 bg-background"
                             : "border-gray-200 hover:border-gray-300"
                         }`}
                       >
@@ -120,10 +114,21 @@ export const NewCoursePageView = () => {
                     );
                   })}
                 </div>
-              </div>
+              </div> */}
               <div className="flex items-center gap-3">
                 <Checkbox
                   checked={enableQuestions}
+                  disabled={disableCheckbox}
+                  onCheckedChange={async (checked) => {
+                    if (!topic) return;
+                    if (checked && !questions.length) {
+                      toast.message(
+                        "You can answer questions to improve course efficiency"
+                      );
+
+                      await generateQuestionsByTopic(topic);
+                    }
+                  }}
                   id="terms"
                   className="border border-gray-300"
                   onClick={() => {
@@ -131,6 +136,7 @@ export const NewCoursePageView = () => {
                       toast.error("Please enter a topic");
                       return;
                     }
+
                     setEnableQuestions(!enableQuestions);
                   }}
                 />
@@ -141,68 +147,24 @@ export const NewCoursePageView = () => {
 
               <div>
                 {enableQuestions && (
-                  <div className=" p-4">
-                    <div className="max-w-4xl mx-auto">
-                      <div className="rounded-lg shadow-sm border bg-sidebar">
-                        <form onSubmit={handleSubmit}>
-                          <div className="h-96 overflow-y-auto p-4 space-y-4 text-sm">
-                            {messages.map((message) => (
-                              <div
-                                key={message.id}
-                                className={`flex ${
-                                  message.role === "user"
-                                    ? "justify-end"
-                                    : "justify-start"
-                                }`}
-                              >
-                                <div
-                                  className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${
-                                    message.role === "user"
-                                      ? "bg-blue-500 text-white"
-                                      : "bg-yellow-100 text-gray-800"
-                                  }`}
-                                >
-                                  {message.content}
-                                </div>
-                              </div>
-                            ))}
-                            {isLoading && (
-                              <div className="flex justify-start">
-                                <div className="bg-yellow-100 text-gray-800 px-4 py-2 rounded-lg">
-                                  <div className="flex items-center space-x-2">
-                                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-600"></div>
-                                    <span>AI is thinking...</span>
-                                  </div>
-                                </div>
-                              </div>
-                            )}
-                          </div>
-
-                          <div className="flex space-x-2 border border-gray-300 rounded-md justify-between items-center">
-                            <Input
-                              value={input}
-                              onChange={handleInputChange}
-                              placeholder="Type your answer..."
-                              className="flex-1 py-5 rounded-md border-none outline-none ring-0 focus-visible:ring-0"
-                              disabled={isLoading}
-                            />
-                            <Button
-                              disabled={isLoading || !input.trim()}
-                              type="submit"
-                            >
-                              <Send className="w-4 h-4" />
-                            </Button>
-                          </div>
-                        </form>
-                      </div>
-                    </div>
-                  </div>
+                  <AiQuestionsChat
+                    questions={questions}
+                    isLoading={isLoading}
+                    messages={messages}
+                    setMessages={setMessages}
+                    input={input}
+                    setInput={setInput}
+                    currentQuestionIndex={currentQuestionIndex}
+                    setCurrentQuestionIndex={setCurrentQuestionIndex}
+                    isComplete={isComplete}
+                    setIsComplete={setIsComplete}
+                  />
                 )}
               </div>
 
               <Button
                 className="w-full"
-                disabled={!topic}
+                disabled={!topic || isLoading || !selectedFormat}
                 onClick={handleCreateCourse}
               >
                 <Sparkles className="w-4 h-4 mr-2" />
@@ -211,6 +173,12 @@ export const NewCoursePageView = () => {
             </div>
           </CardContent>
         </Card>
+      </div>
+      <div className="max-w-7xl mx-auto">
+        <h2 className="text-3xl font-bold mb-4 leading-relaxed">
+          Your Courses
+        </h2>
+        <GetUserCourses />
       </div>
     </div>
   );

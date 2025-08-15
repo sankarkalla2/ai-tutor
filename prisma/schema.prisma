@@ -10,8 +10,10 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+  // Used for migrations
 }
 
 model User {
@@ -24,6 +26,10 @@ model User {
   updatedAt     DateTime
   sessions      Session[]
   accounts      Account[]
+  user          Course[]
+
+  passkeys Passkey[]
+  Lession  Lesson[]
 
   @@unique([email])
   @@map("user")
@@ -72,4 +78,63 @@ model Verification {
   updatedAt  DateTime?
 
   @@map("verification")
+}
+
+model Course {
+  id           String   @id @default(uuid())
+  title        String
+  description  String
+  progress     Int      @default(0)
+  lessonsCount Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  userId       String
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  modules      Module[]
+}
+
+model Module {
+  id        String   @id @default(uuid())
+  title     String
+  createdAt DateTime @default(now())
+  courseId  String
+  course    Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  lessons   Lesson[]
+}
+
+model Lesson {
+  id               String       @id @default(uuid())
+  title            String
+  description      String
+  status           LessonStatus @default(NOT_GENERATED)
+  content          String?
+  createdAt        DateTime     @default(now())
+  previewQuestions String[]
+  moduleId         String
+  module           Module       @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+  userId           String
+  user             User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+enum LessonStatus {
+  NOT_GENERATED
+  GENERATED
+  COMPLETED
+}
+
+model Passkey {
+  id           String    @id
+  name         String?
+  publicKey    String
+  userId       String
+  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  credentialID String
+  counter      Int
+  deviceType   String
+  backedUp     Boolean
+  transports   String?
+  createdAt    DateTime?
+  aaguid       String?
+
+  @@map("passkey")
 }

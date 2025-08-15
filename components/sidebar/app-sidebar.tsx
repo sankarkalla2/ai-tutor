@@ -12,6 +12,7 @@ import {
   LogIn,
   Map,
   MessagesSquare,
+  PanelLeft,
   PieChart,
   Plus,
   Settings2,
@@ -32,6 +33,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarRail,
+  useSidebar,
 } from "@/components/ui/sidebar";
 import { TeamSwitcher } from "./theme-switcher";
 import { NavUser } from "./nav-user";
@@ -39,6 +41,8 @@ import { NavProjects } from "./nav-projects";
 import Link from "next/link";
 import { authClient } from "@/lib/auth-client";
 import { Skeleton } from "../ui/skeleton";
+import { tool } from "ai";
+import { usePathname } from "next/navigation";
 
 // This is sample data.
 const data = {
@@ -170,8 +174,26 @@ const data = {
   ],
 };
 
+const sidebarItems = [
+  {
+    title: "Chat With Course",
+    url: "/chat",
+    icon: MessagesSquare,
+    tooltip: "Create New Course",
+  },
+  {
+    title: "My Courses",
+    url: "/courses",
+    icon: BookOpen,
+    tooltip: "My Courses",
+  },
+];
+
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const session = authClient.useSession();
+  const pathname = usePathname();
+  const { open, toggleSidebar } = useSidebar();
+
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
@@ -192,26 +214,36 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </SidebarGroup>
         <SidebarGroup>
           <SidebarMenu>
-            <SidebarMenuItem>
-              <SidebarMenuButton asChild>
-                <Link href={"/new"}>
-                  <MessagesSquare />
-                  Chat With Course
-                </Link>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-            <SidebarMenuItem>
-              <SidebarMenuButton asChild>
-                <Link href={"/new"}>
-                  <BookOpen />
-                  My Learnings
-                </Link>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
+            {sidebarItems.map((item) => (
+              <SidebarMenuItem key={item.url}>
+                <SidebarMenuButton
+                  asChild
+                  tooltip={item.tooltip}
+                  isActive={pathname.includes(item.url)}
+                >
+                  <Link href={item.url}>
+                    <item.icon />
+                    {item.title}
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            ))}
           </SidebarMenu>
         </SidebarGroup>
       </SidebarContent>
       <SidebarFooter>
+        {!open && (
+          <SidebarMenu>
+            <SidebarMenuItem>
+              <SidebarMenuButton
+                tooltip={"Toggle Sidebar"}
+                onClick={toggleSidebar}
+              >
+                <PanelLeft />
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          </SidebarMenu>
+        )}
         {session.isPending ? (
           <Skeleton className="w-full h-10" />
         ) : session.data?.user ? (

@@ -1,12 +1,23 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Geist, Geist_Mono, Inter, DM_Sans } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
+import QueryProvider from "@/providers/query-provider";
 
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
+});
+
+const geist = Geist({
+  subsets: ["latin"],
+  variable: "--font-geist",
+});
+
+const dm_sans = DM_Sans({
+  subsets: ["latin"],
+  variable: "--font-dm-sans",
 });
 
 export const metadata: Metadata = {
@@ -29,8 +40,10 @@ export default function RootLayout({
             defaultTheme="system"
             disableTransitionOnChange
           >
-            {children}
-            <Toaster richColors position="bottom-center"/> 
+            <QueryProvider>
+              <main className={`${geist.className}`}>{children}</main>
+            </QueryProvider>
+            <Toaster richColors position="bottom-center" />
           </ThemeProvider>
         </body>
       </html>

@@ -1,13 +1,27 @@
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 // If your Prisma file is located elsewhere, you can change the path
-import { PrismaClient } from "@/lib/generated/prisma";
-import { magicLink, } from "better-auth/plugins";
-import { passkey } from "better-auth/plugins/passkey"
+import { magicLink } from "better-auth/plugins";
+import { passkey } from "better-auth/plugins/passkey";
+import { db } from "./db";
+import {
+  polar,
+  checkout,
+  portal,
+  usage,
+  webhooks,
+} from "@polar-sh/better-auth";
+import { Polar } from "@polar-sh/sdk";
 
-const prisma = new PrismaClient();
+export const polarClient = new Polar({
+  accessToken: process.env.POLAR_ACCESS_TOKEN,
+  // Use 'sandbox' if you're using the Polar Sandbox environment
+  // Remember that access tokens, products, etc. are completely separated between environments.
+  // Access tokens obtained in Production are for instance not usable in the Sandbox environment.
+  server: "sandbox",
+});
 export const auth = betterAuth({
-  database: prismaAdapter(prisma, {
+  database: prismaAdapter(db, {
     provider: "postgresql", // or "mysql", "postgresql", ...etc
   }),
 
@@ -28,6 +42,23 @@ export const auth = betterAuth({
         console.log(data);
       },
     }),
-    passkey()
+    passkey(),
+    polar({
+      client: polarClient,
+      createCustomerOnSignUp: true,
+      use: [
+        checkout({
+          products: [
+            {
+              productId: "bcf1c6bd-6cba-4a13-92fa-7b6458d008f2",
+              slug: "Monthly", // Custom slug for easy reference in Checkout URL, e.g. /checkout/Monthly
+            },
+          ],
+          successUrl: process.env.POLAR_SUCCESS_URL,
+          authenticatedUsersOnly: true,
+        }),
+        portal(),
+      ],
+    }),
   ],
 });
