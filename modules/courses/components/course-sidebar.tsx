@@ -15,6 +15,7 @@ import {
   PanelLeft,
   PanelRight,
   Play,
+  StarIcon,
 } from "lucide-react";
 import {
   Collapsible,
@@ -42,6 +43,10 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 import { useCourseViewId } from "../hooks/use-course-view-id";
 import { NavUser } from "@/components/sidebar/nav-user";
+import { getUserActiveSubscription } from "@/app/server/user";
+import { useQuery } from "@tanstack/react-query";
+import UpgradeCard from "@/components/upgrade-card";
+import { Button } from "@/components/ui/button";
 export function CourseSidebar() {
   const pathname = usePathname();
   const params = useParams<{ id: string }>();
@@ -49,6 +54,11 @@ export function CourseSidebar() {
   const session = authClient.useSession();
   const { data, isLoading, isError } = useCourseViewId(params.id);
   const { open, toggleSidebar, setOpen, isMobile } = useSidebar();
+  const { data: userSubscription, isLoading: isGetSubscriptionLoading } =
+    useQuery({
+      queryKey: ["get-user-subscription"],
+      queryFn: () => getUserActiveSubscription(),
+    });
 
   if (isLoading) {
     return (
@@ -163,10 +173,34 @@ export function CourseSidebar() {
       </SidebarContent>
 
       <SidebarFooter>
+        <SidebarGroup className="group-data-[collapsible=icon]:hidden">
+          {session.data?.user &&
+            !userSubscription &&
+            !isGetSubscriptionLoading && (
+              <SidebarMenu>
+                <div className="w-full bg-accent p-4 rounded-xl max-w-sm">
+                  <div>
+                    <div className="mb-4">
+                      <h2 className="text-xl font-semibold">Upgrade to Pro</h2>
+                      <p className="text-sm">Go for unlimited access.</p>
+                    </div>
+                  </div>
+
+                  <Button variant={"default"} className="cursor-pointer w-full">
+                    <StarIcon/>
+                    Upgrade
+                  </Button>
+                </div>
+              </SidebarMenu>
+            )}
+        </SidebarGroup>
         {!open && !isMobile && (
           <SidebarMenu>
             <SidebarMenuItem>
-              <SidebarMenuButton onClick={() => setOpen(true)} tooltip={'Open sidebar ctrl+b'}>
+              <SidebarMenuButton
+                onClick={() => setOpen(true)}
+                tooltip={"Open sidebar ctrl+b"}
+              >
                 <PanelRight />
               </SidebarMenuButton>
             </SidebarMenuItem>

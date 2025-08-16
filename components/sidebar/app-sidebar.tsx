@@ -17,6 +17,8 @@ import {
   Plus,
   Settings2,
   SquareTerminal,
+  StarIcon,
+  StarsIcon,
 } from "lucide-react";
 
 // import { NavMain } from "@/components/nav-main";
@@ -32,6 +34,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarMenuSubItem,
   SidebarRail,
   useSidebar,
 } from "@/components/ui/sidebar";
@@ -43,6 +46,18 @@ import { authClient } from "@/lib/auth-client";
 import { Skeleton } from "../ui/skeleton";
 import { tool } from "ai";
 import { usePathname } from "next/navigation";
+import { useQuery } from "@tanstack/react-query";
+import { getUserActiveSubscription } from "@/app/server/user";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "../ui/card";
+import { Button } from "../ui/button";
+import { RippleButton } from "../animate-ui/buttons/ripple";
+import UpgradeCard from "../upgrade-card";
 
 // This is sample data.
 const data = {
@@ -193,6 +208,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const session = authClient.useSession();
   const pathname = usePathname();
   const { open, toggleSidebar } = useSidebar();
+  const { data: userSubscription, isLoading: isGetSubscriptionLoading } =
+    useQuery({
+      queryKey: ["get-user-subscription"],
+      queryFn: () => getUserActiveSubscription(),
+    });
 
   return (
     <Sidebar collapsible="icon" {...props}>
@@ -232,6 +252,15 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </SidebarGroup>
       </SidebarContent>
       <SidebarFooter>
+        <SidebarGroup className="group-data-[collapsible=icon]:hidden">
+          {session.data?.user &&
+            !userSubscription &&
+            !isGetSubscriptionLoading && (
+              <SidebarMenu>
+                <UpgradeCard />
+              </SidebarMenu>
+            )}
+        </SidebarGroup>
         {!open && (
           <SidebarMenu>
             <SidebarMenuItem>

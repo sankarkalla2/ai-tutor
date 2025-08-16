@@ -7,7 +7,8 @@ import {
   createCourseOverview,
   createQuestionsByTopic,
 } from "../server/create-course";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { getUserActiveSubscription } from "@/app/server/user";
 
 type Format = "course" | "guide" | "roadmap";
 interface Message {
@@ -37,6 +38,11 @@ export const useCreateCourse = () => {
   const [isComplete, setIsComplete] = useState(false);
 
   const router = useRouter();
+  const { data: userSubscription, isLoading: isGetSubscriptionLoading } =
+    useQuery({
+      queryKey: ["get-user-subscription"],
+      queryFn: () => getUserActiveSubscription(),
+    });
 
   const { mutate, isPending } = useMutation({
     mutationFn: async ({
@@ -82,6 +88,9 @@ export const useCreateCourse = () => {
     if (!topic) {
       toast.error("Plase select the topic");
       return;
+    }
+    if (!userSubscription) {
+      return toast.error("Please upgrade to get unlimted access");
     }
     setIsLoading(true);
 
@@ -157,6 +166,8 @@ export const useCreateCourse = () => {
     setCurrentQuestionIndex,
     isComplete,
     setIsComplete,
-    isPending
+    isPending,
+    userSubscription,
+    isGetSubscriptionLoading,
   };
 };

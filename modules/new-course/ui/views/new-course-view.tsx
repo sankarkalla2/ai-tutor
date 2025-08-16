@@ -15,6 +15,8 @@ import Loader from "@/components/loader";
 import { Textarea } from "@/components/ui/textarea";
 import GetUserCourses from "@/components/courses/get-user-courses";
 import { useSidebar } from "@/components/ui/sidebar";
+import { getUserActiveSubscription } from "@/app/server/user";
+import { useQuery } from "@tanstack/react-query";
 
 export const NewCoursePageView = () => {
   const {
@@ -41,9 +43,12 @@ export const NewCoursePageView = () => {
     isComplete,
     setIsComplete,
     isPending,
+    isGetSubscriptionLoading,
+    userSubscription,
   } = useCreateCourse();
 
   const { isMobile, toggleSidebar } = useSidebar();
+
   return (
     <div className="min-h-screen mx-auto p-4 md:px-8 space-y-8">
       {isMobile && (
@@ -85,6 +90,7 @@ export const NewCoursePageView = () => {
                   value={topic}
                   onChange={(e) => setTopic(e.target.value)}
                   placeholder="Enter a topic"
+                  disabled={isGetSubscriptionLoading || isLoading}
                   className=""
                   required
                 />
@@ -121,6 +127,10 @@ export const NewCoursePageView = () => {
                   disabled={disableCheckbox}
                   onCheckedChange={async (checked) => {
                     if (!topic) return;
+                    if (!userSubscription)
+                      return toast.error(
+                        "Please upgrade to get unlimted access"
+                      );
                     if (checked && !questions.length) {
                       toast.message(
                         "You can answer questions to improve course efficiency"
@@ -136,6 +146,10 @@ export const NewCoursePageView = () => {
                       toast.error("Please enter a topic");
                       return;
                     }
+                    if (!userSubscription)
+                      return toast.error(
+                        "Please upgrade to get unlimted access"
+                      );
 
                     setEnableQuestions(!enableQuestions);
                   }}

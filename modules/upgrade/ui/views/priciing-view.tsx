@@ -9,48 +9,10 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { auth, polarClient } from "@/lib/auth";
 import { authClient } from "@/lib/auth-client";
 import { useQuery } from "@tanstack/react-query";
-
-interface Plan {
-  id: string;
-  title: string;
-  description: string;
-  price: number;
-  features: string[];
-  href: string;
-}
-
-const plans: Plan[] = [
-  {
-    id: "pro",
-    title: "Professional",
-    description: "Perfect for individual developers",
-    price: 24,
-    features: [
-      "Lifetime access",
-      "All current + future components",
-      "Free updates",
-      "Use in unlimited projects",
-      "Email support",
-    ],
-    href: "#",
-  },
-  {
-    id: "team",
-    title: "Team",
-    description: "Ideal for small teams",
-    price: 129,
-    features: [
-      "Everything in Pro plan",
-      "5 team members included",
-      "Priority support",
-      "Team management dashboard",
-      "One invoice for all users",
-    ],
-    href: "#",
-  },
-];
+import { custom } from "zod";
 
 export default function PricingView() {
   const { data: allPlans, isLoading: isGetPlansLoading } = useQuery({
@@ -83,13 +45,49 @@ export default function PricingView() {
           {allPlans &&
             allPlans.map((plan) => {
               let checkoutLabel = userSubscription ? "Upgrade" : "Get started";
-              let checkout = () => authClient.checkout({ products: [plan.id] });
+
+              let checkout: () => void = () => {};
+              checkout = () => authClient.checkout({ products: [plan.id] });
               const isPlanActive = userSubscription
                 ? userSubscription.productId === plan.id
                 : false;
               if (isPlanActive) {
                 checkoutLabel = "Manage subscription";
-                checkout = () => authClient.customer.portal()
+
+                const updatedPlan = async () => {
+                  // Get the customer ID from your Better Auth state
+                  console.log("called");
+                  const customerState = await authClient.customer.state();
+                  const customerId = customerState.data?.id ?? "";
+
+                  // Create a customer session
+                  const sessionResult =
+                    await polarClient.customerSessions.create({
+                      customerId: customerId,
+                    });
+
+                  // Extract the customer session token
+                  const customerSessionToken = sessionResult.token;
+
+                  const res =
+                    await polarClient.customerPortal.subscriptions.update(
+                      {
+                        customerSession: customerSessionToken,
+                      },
+                      {
+                        id: userSubscription?.id ?? "",
+                        customerSubscriptionUpdate: { productId: plan.id },
+                      }
+                    );
+                  console.log(res);
+                };
+                checkout = () => authClient.customer.portal();
+
+                if (plan.id !== userSubscription?.productId) {
+                  //Todo: code for updated plan
+                  console.log("it already here");
+                  checkout = updatedPlan;
+                }
               }
               return (
                 <Card key={plan.id} className="sm:px-6 sm:!py-12">
@@ -136,7 +134,7 @@ export default function PricingView() {
                       className="w-full"
                       onClick={() => checkout()}
                     >
-                      {isPlanActive ? "Manange" : "Upgrade"}
+                      {checkoutLabel}
                     </Button>
                   </CardFooter>
                 </Card>
