@@ -9,7 +9,7 @@ export const maxDuration = 30;
 
 export async function POST(
   req: Request,
-  { params: { lessonId } }: { params: { lessonId: string } }
+  { params }: { params: Promise<{ lessonid: string }> }
 ) {
   const { messages, userId }: { messages: UIMessage[]; userId: string } =
     await req.json();
@@ -23,7 +23,7 @@ export async function POST(
 
   const lesson = await db.lesson.findUnique({
     where: {
-      id: lessonId,
+      id: (await params).lessonid,
     },
     include: {
       module: {
