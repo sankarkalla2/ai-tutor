@@ -1,3 +1,4 @@
+"use client";
 import { getAllPlans, getUserActiveSubscription } from "@/app/server/user";
 import Loader from "@/components/loader";
 import { Button } from "@/components/ui/button";
@@ -9,7 +10,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { auth, polarClient } from "@/lib/auth";
+import { polarClient } from "@/lib/auth";
 import { authClient } from "@/lib/auth-client";
 import { useQuery } from "@tanstack/react-query";
 import { custom } from "zod";
