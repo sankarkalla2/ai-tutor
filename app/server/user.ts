@@ -1,6 +1,7 @@
 "use server";
 
-import { auth, polarClient } from "@/lib/auth";
+import { auth} from "@/lib/auth";
+import { polarClient } from "@/lib/polar";
 import { headers } from "next/headers";
 
 export const getAllPlans = async () => {

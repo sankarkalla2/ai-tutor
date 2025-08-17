@@ -1,3 +1,4 @@
+import { getUserActiveSubscription } from "@/app/server/user";
 import { db } from "@/lib/db";
 import { lesson_QA_TutorPrompt } from "@/lib/prompts/lesson-prompt";
 import { openai } from "@ai-sdk/openai";
@@ -12,8 +13,13 @@ export async function POST(
 ) {
   const { messages, userId }: { messages: UIMessage[]; userId: string } =
     await req.json();
-
-  console.log(params.lessonId, userId);
+  const userSubscription = await getUserActiveSubscription();
+  if (!userSubscription) {
+    return NextResponse.json(
+      { message: "Upgrade to get unlimited access" },
+      { status: 403 }
+    );
+  }
 
   const lesson = await db.lesson.findUnique({
     where: {

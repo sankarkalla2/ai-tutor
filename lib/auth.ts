@@ -1,6 +1,5 @@
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
-// If your Prisma file is located elsewhere, you can change the path
 import { magicLink } from "better-auth/plugins";
 import { passkey } from "better-auth/plugins/passkey";
 import { db } from "./db";
@@ -11,15 +10,8 @@ import {
   usage,
   webhooks,
 } from "@polar-sh/better-auth";
-import { Polar } from "@polar-sh/sdk";
+import { polarClient } from "./polar";
 
-export const polarClient = new Polar({
-  accessToken: process.env.POLAR_ACCESS_TOKEN,
-  // Use 'sandbox' if you're using the Polar Sandbox environment
-  // Remember that access tokens, products, etc. are completely separated between environments.
-  // Access tokens obtained in Production are for instance not usable in the Sandbox environment.
-  server: "sandbox",
-});
 export const auth = betterAuth({
   database: prismaAdapter(db, {
     provider: "postgresql", // or "mysql", "postgresql", ...etc

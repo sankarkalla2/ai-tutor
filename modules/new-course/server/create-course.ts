@@ -6,6 +6,7 @@ import { z } from "zod";
 import { db } from "@/lib/db";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
+import { getUserActiveSubscription } from "@/app/server/user";
 
 export const createQuestionsByTopic = async (
   format: "course" | "guide" | "roadmap",
@@ -62,6 +63,11 @@ export const createCourseOverview = async (
 
   if (!session?.user) {
     return { status: 401, message: "Please login to create course" };
+  }
+
+  const userSubscription = await getUserActiveSubscription();
+  if (!userSubscription) {
+    return { status: 401, message: "Upgrade to get unlimited access" };
   }
 
   const { object } = await generateObject({

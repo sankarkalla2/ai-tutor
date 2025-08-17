@@ -8,6 +8,7 @@ import { streamObject } from "ai";
 import { z } from "zod";
 import { createLessonGenerationPrompt } from "@/lib/prompts/lesson-prompt";
 import { google } from "@ai-sdk/google";
+import { getUserActiveSubscription } from "@/app/server/user";
 
 const LessonOutputSchema = z.object({
   lessonContent: z.string(),
@@ -45,6 +46,14 @@ export async function GET(
     return NextResponse.json(
       { error: "Lesson already generated" },
       { status: 400 }
+    );
+  }
+
+  const userSubscription = await getUserActiveSubscription();
+  if (!userSubscription) {
+    return NextResponse.json(
+      { message: "Upgrade to get unlimited access" },
+      { status: 403 }
     );
   }
 
@@ -128,12 +137,20 @@ export async function POST(
   if (!lesson)
     return NextResponse.json({ error: "Lesson not found" }, { status: 404 });
 
+  const userSubscription = await getUserActiveSubscription();
+  if (!userSubscription) {
+    return NextResponse.json(
+      { message: "Upgrade to get unlimited access" },
+      { status: 403 }
+    );
+  }
+
   let lessonContent = "";
   let previewQuestions: any[] = [];
   const { partialObjectStream } = await streamObject({
     model: google("gemini-2.5-flash"),
     schema: LessonOutputSchema,
-    
+
     prompt: createLessonGenerationPrompt(
       lesson.module.course.title,
       lesson.module.course.description || "",

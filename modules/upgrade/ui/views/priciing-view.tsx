@@ -10,10 +10,9 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { polarClient } from "@/lib/auth";
 import { authClient } from "@/lib/auth-client";
+import { polarClient } from "@/lib/polar";
 import { useQuery } from "@tanstack/react-query";
-import { custom } from "zod";
 
 export default function PricingView() {
   const { data: allPlans, isLoading: isGetPlansLoading } = useQuery({
