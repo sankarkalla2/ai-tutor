@@ -34,7 +34,7 @@ const CourseHeader = ({ courseId }: CourseHeaderProps) => {
       <div className="flex w-full items-center gap-2 justify-between">
         <div className="">
           <Breadcrumb>
-            <BreadcrumbList>
+            <BreadcrumbList className="">
               <BreadcrumbItem>
                 <BreadcrumbLink href="/" className="flex items-center gap-1">
                   <Home className="h-4 w-4" />
@@ -53,10 +53,10 @@ const CourseHeader = ({ courseId }: CourseHeaderProps) => {
               </BreadcrumbItem>
             </BreadcrumbList>
           </Breadcrumb>
-          <div className="flex items-center text-xs gap-x-2 text-muted-foreground">
-            <span>{data?.course.modules.length} Modules</span>
-            <span>{totalLessons} Lessons</span>
-            <span>{completedLessons} Lessons Completed</span>
+          <div className="flex items-center gap-x-2 text-muted-foreground">
+            <Badge size={"xs"} variant={'info'}>{data?.course.modules.length} Modules</Badge>
+            <Badge size={"xs"}>{totalLessons} Lessons</Badge>
+            <Badge size={"xs"}>{completedLessons} Lessons Completed</Badge>
           </div>
         </div>
       </div>

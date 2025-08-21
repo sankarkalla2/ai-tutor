@@ -15,6 +15,7 @@ import {
   PanelLeft,
   PanelRight,
   Play,
+  Sparkles,
   StarIcon,
 } from "lucide-react";
 import {
@@ -126,7 +127,7 @@ export function CourseSidebar() {
                         </SidebarMenuButton>
                       </CollapsibleTrigger>
 
-                      <CollapsibleContent className="ml-4 mt-1 space-y-1">
+                      <CollapsibleContent className="ml-2 mt-1 space-y-1">
                         {module.lessons.map((lesson) => {
                           const isActive =
                             pathname.split("/").pop() === lesson.id;
@@ -186,9 +187,15 @@ export function CourseSidebar() {
                     </div>
                   </div>
 
-                  <Button variant={"default"} className="cursor-pointer w-full">
-                    <StarIcon/>
-                    Upgrade
+                  <Button
+                    variant={"primary"}
+                    className="cursor-pointer w-full"
+                    asChild
+                  >
+                    <Link href="/pricing">
+                      <Sparkles />
+                      Upgrade
+                    </Link>
                   </Button>
                 </div>
               </SidebarMenu>

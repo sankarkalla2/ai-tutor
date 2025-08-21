@@ -10,6 +10,7 @@ import CourseHeader from "../components/course-header";
 
 import { useCourseViewId } from "../hooks/use-course-view-id";
 import Link from "next/link";
+import { MobileSidebarToggleButton } from "@/components/mobile-sidebar-toggle-button";
 const CourseViewIdPage = () => {
   const params = useParams<{ id: string }>();
   const router = useRouter();
@@ -41,6 +42,7 @@ const CourseViewIdPage = () => {
       <div className="max-w-4xl mx-auto *:mt-6 px-4">
         {/* Course Header */}
 
+        <MobileSidebarToggleButton />
         <div className="space-x-2">
           <div className="flex items-center justify-between">
             <h1 className="text-3xl font-bold">{data?.course?.title}</h1>
@@ -104,7 +106,7 @@ const CourseViewIdPage = () => {
                         </div>
 
                         <div className="ml-auto flex items-center gap-2">
-                          <Badge>
+                          <Badge variant={"primary"}>
                             <MoveRight /> Start
                           </Badge>
                         </div>

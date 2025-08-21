@@ -1,6 +1,7 @@
 "use server";
 
-import { auth} from "@/lib/auth";
+import { auth } from "@/lib/auth";
+import { db } from "@/lib/db";
 import { polarClient } from "@/lib/polar";
 import { headers } from "next/headers";
 
@@ -26,4 +27,27 @@ export const getUserActiveSubscription = async () => {
 
   const subscription = customer.activeSubscriptions[0];
   return subscription ?? null;
+};
+
+export const updateUserProfile = async (name?: string, imgUrl?: string) => {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+  if (!session?.user) {
+    return { status: 401, message: "Access Denied" };
+  }
+
+  try {
+    await auth.api.updateUser({
+      body: {
+        ...(name && { name }),
+        ...(name && { image: imgUrl }),
+      },
+    });
+
+    return { status: 200, message: "You profile Updated" };
+  } catch (error) {
+    console.log(error)
+    return { status: 500, message: "Something went wrong. please try again." };
+  }
 };

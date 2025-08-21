@@ -1,5 +1,6 @@
 import {
   Dialog,
+  DialogBody,
   DialogClose,
   DialogContent,
   DialogDescription,
@@ -15,10 +16,9 @@ interface Props {
   title: string;
   description?: string;
   children: React.ReactNode;
-  onClick?: () => void;
-  trigger: React.ReactNode;
-  open: boolean;
-  onOpenChange: () => void;
+  trigger?: React.ReactNode;
+  open?: boolean;
+  onOpenChange?: () => void;
 }
 export const ModalProvider = ({
   title,
@@ -26,22 +26,18 @@ export const ModalProvider = ({
   open,
   children,
   trigger,
-  onClick,
-  onOpenChange
+  onOpenChange,
 }: Props) => {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogTrigger asChild>{trigger}</DialogTrigger>
-      <DialogContent>
-        <DialogTitle>{title}</DialogTitle>
-        {description && <DialogDescription>{description}</DialogDescription>}
-        {children}
-        <DialogFooter>
-          <DialogClose asChild>
-            <Button variant="outline">Cancel</Button>
-          </DialogClose>
-          <Button onClick={onClick} type="submit">Save changes</Button>
-        </DialogFooter>
+      {trigger && <DialogTrigger asChild>{trigger}</DialogTrigger>}
+
+      <DialogContent overlay={true}>
+        <DialogHeader>
+          <DialogTitle>{title}</DialogTitle>
+          {description && <DialogDescription>{description}</DialogDescription>}
+        </DialogHeader>
+        <DialogBody>{children}</DialogBody>
       </DialogContent>
     </Dialog>
   );
