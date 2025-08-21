@@ -21,10 +21,6 @@ import {
   StarsIcon,
 } from "lucide-react";
 
-// import { NavMain } from "@/components/nav-main";
-// import { NavProjects } from "@/components/nav-projects";
-// import { NavUser } from "@/components/nav-user";
-// import { TeamSwitcher } from "@/components/team-switcher";
 import {
   Sidebar,
   SidebarContent,
@@ -34,7 +30,6 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarMenuSubItem,
   SidebarRail,
   useSidebar,
 } from "@/components/ui/sidebar";
@@ -252,11 +247,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </SidebarGroup>
       </SidebarContent>
       <SidebarFooter>
-        <SidebarGroup className="group-data-[collapsible=icon]:hidden">
+        <SidebarGroup className="group-data-[collapsible=icon]:hidden p-0">
           {session.data?.user &&
             !userSubscription &&
             !isGetSubscriptionLoading && (
-              <SidebarMenu>
+              <SidebarMenu className="p-0">
                 <UpgradeCard />
               </SidebarMenu>
             )}

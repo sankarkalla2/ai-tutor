@@ -25,7 +25,7 @@ const GetUserCourses = () => {
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {[1, 2, 3, 4].map((key) => (
-          <Skeleton className="w-full h-52 p-4" key={key}/>
+          <Skeleton className="w-full h-52 p-4" key={key} />
         ))}
       </div>
     );
@@ -53,6 +53,7 @@ const GetUserCourses = () => {
             <Card
               className="border hover:shadow-md transition-shadow duration-200 cursor-pointer"
               key={course.id}
+              variant={'accent'}
             >
               <CardContent className="">
                 <CardHeader className="p-0 mb-4">
@@ -97,12 +98,7 @@ const GetUserCourses = () => {
                 </div> */}
 
                 <div className="flex gap-2">
-                  <Button
-                    asChild
-                    size="sm"
-                    className="flex-1"
-                    variant={"default"}
-                  >
+                  <Button asChild size="sm" className="flex-1" variant={'mono'}>
                     <Link href={`/course/${course.id}`}>
                       <ExternalLink className="w-4 h-4 mr-2" />
                       View Course

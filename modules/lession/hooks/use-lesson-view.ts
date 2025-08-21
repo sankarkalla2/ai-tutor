@@ -3,20 +3,33 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { toast } from "sonner";
 import {
+  generateQuizQuestions,
   getLessionById,
   toggleLessionStatus,
 } from "@/modules/lession/server/lesson";
+import { useRouter } from "next/navigation";
 
 export const useLessonView = (lessonId: string, courseId: string) => {
   const [open, setOpen] = useState(false);
   const [streamingText, setStreamingText] = useState("");
   const [isStreaming, setIsStreaming] = useState(false);
   const queryClient = useQueryClient();
+  const router = useRouter();
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ["get-lesson-by-id", lessonId],
     queryFn: async () => await getLessionById(lessonId, courseId),
   });
+  const { data: quiz, isLoading: isQuizLoading } = useQuery({
+    queryKey: ["generate-quiz", lessonId],
+    queryFn: async () => await generateQuizQuestions(lessonId),
+  });
+
+  
+  const generateQuiz = async() => {
+
+    
+  }
 
   // Auto-generate lesson if not yet generated
   useEffect(() => {
@@ -100,7 +113,7 @@ export const useLessonView = (lessonId: string, courseId: string) => {
       }
     },
   });
-  // const { mutate: toggleLession, isPending } = useMutation({
+
   //   mutationKey: ["toggle-lession-status", lessonId],
   //   mutationFn: async () => {
   //     console.log("mutationFn running with lessonId:", lessonId);
@@ -220,6 +233,17 @@ export const useLessonView = (lessonId: string, courseId: string) => {
     } else {
       res = await fetch(`/api/lessons/${lessonId}/generate`);
     }
+    if (res.status === 401) {
+      toast.error("Please login to use services");
+      return router.push("/sign-in");
+    } else if (res.status === 403) {
+      toast.error("Plese upgrde for unlimited access");
+      return router.push("/pricing");
+    } else if (res.status === 404) {
+      toast.error("lesson not found");
+      return router.push(`/courses/${courseId}`);
+    }
+
     if (!res.body) {
       setIsStreaming(false);
       return;

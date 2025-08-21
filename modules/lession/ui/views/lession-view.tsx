@@ -30,14 +30,29 @@ import {
 } from "@/components/ui/resizable";
 
 import { useLessonView } from "../../hooks/use-lesson-view";
-import { useToggleRightSide } from "../../hooks/use-toggle-right-sidebar";
 
 import { Response } from "@/components/markdown-content";
 import { ModalProvider } from "@/components/modal-provider";
 import { LessonViewChat } from "../components/chat-component";
 import { LessonHeader } from "../components/lesson-header";
 import LessonChatDrawer from "../components/lesson-chat-drawer";
-import { ManagementBar } from "@/components/animate-ui/ui-elements/management-bar";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { useEffect } from "react";
+import { useToggleLessonChat } from "../../providers/store-provier";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardTable,
+} from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
+import QuizPage from "../components/lesson-quiz-page";
+import { experimental_useObject } from "@ai-sdk/react";
+import z from "zod";
+import { useQuery } from "@tanstack/react-query";
+import { getCoursePreiview } from "@/modules/courses/server/courses";
+import Link from "next/link";
 
 const LessonView = () => {
   const params = useParams<{ id: string; lessonId: string }>();
@@ -53,8 +68,47 @@ const LessonView = () => {
     streamingText,
     isStreaming,
   } = useLessonView(params.lessonId, params.id);
-  const { toggleOpen, isOpen } = useToggleRightSide();
+  const isMobile = useIsMobile();
+  const { object, submit } = experimental_useObject({
+    api: `/api/lessons/${params.lessonId}/quiz`,
+    schema: z.object({
+      quiz: z.array(
+        z.object({
+          id: z.string(),
+          question: z.string(),
+          options: z.array(z.string()).min(2).max(5),
+          answer: z.string(),
+        })
+      ),
+    }),
+  });
 
+  const { data: courseIndex, isLoading: isLoadingCourse } = useQuery({
+    queryKey: ["get-course-preview", params.id],
+    queryFn: () => getCoursePreiview(params.id),
+  });
+
+  let prevLessonId = undefined;
+  let nextLessonId = undefined;
+  let currentLessonId = params.lessonId;
+
+  if (courseIndex?.course) {
+    const allLessons = courseIndex.course.modules.flatMap(
+      (module) => module.lessons
+    );
+    const currentIndex = allLessons.findIndex(
+      (lesson) => lesson.id === currentLessonId
+    );
+
+    if (currentIndex > 0) {
+      prevLessonId = allLessons[currentIndex - 1].id;
+    }
+    if (currentIndex >= 0 && currentIndex < allLessons.length - 1) {
+      nextLessonId = allLessons[currentIndex + 1].id;
+    }
+  }
+
+  const { isOpen, toggleOpen } = useToggleLessonChat((state) => state);
   if (isError) return <div>Error loading course data</div>;
 
   return (
@@ -78,7 +132,7 @@ const LessonView = () => {
               <Button
                 size="sm"
                 variant="ghost"
-                onClick={toggleOpen}
+                onClick={() => toggleOpen()}
                 disabled={isLoading}
               >
                 {isOpen ? <MessageCircleOff /> : <MessageCircle />}
@@ -126,7 +180,7 @@ const LessonView = () => {
                   variant={
                     data?.lesson && data.lesson.status === "COMPLETED"
                       ? "destructive"
-                      : "default"
+                      : "primary"
                   }
                   onClick={() => toggleLession()}
                 >
@@ -149,9 +203,26 @@ const LessonView = () => {
 
             {/* --- Lesson Content --- */}
             {!isLoading ? (
-              <Response>
-                {streamingText || (data?.lesson && data?.lesson.content) || ""}
-              </Response>
+              <div className="space-y-4">
+                <Response>
+                  {streamingText ||
+                    (data?.lesson && data?.lesson.content) ||
+                    ""}
+                </Response>
+                <QuizPage lessonId={params.lessonId} />
+                <div className="flex items-center justify-between">
+                  <Button disabled={!prevLessonId} asChild>
+                    <Link href={`/course/${params.id}/lesson/${prevLessonId}`}>
+                      Prev{" "}
+                    </Link>
+                  </Button>
+                  <Button disabled={!nextLessonId} asChild>
+                    <Link href={`/course/${params.id}/lesson/${nextLessonId}`}>
+                      Next{" "}
+                    </Link>
+                  </Button>
+                </div>
+              </div>
             ) : (
               <div className="h-full flex items-center justify-center">
                 <Spinner />

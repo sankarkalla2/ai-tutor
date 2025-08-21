@@ -30,9 +30,10 @@ export const LessonViewChat: React.FC<LessonViewChatProps> = ({
     params.id
   );
 
-  const { messages, sendMessage, status } = useChat({
+  const { messages, sendMessage, status,  } = useChat({
     transport: new DefaultChatTransport({
       api: `/api/chat/${params.lessonId}`,
+      
     }),
   });
 

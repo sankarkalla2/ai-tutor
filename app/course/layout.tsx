@@ -7,7 +7,8 @@ import { Home, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useCourseViewId } from "@/modules/courses/hooks/use-course-view-id";
 import { useParams } from "next/navigation";
-import { Header } from "@/modules/lession/ui/components/lesson-header";
+import { MobileSidebarToggleButton } from "@/components/mobile-sidebar-toggle-button";
+import { ToggleLessonChatProvider } from "@/modules/lession/providers/store-provier";
 
 const CourseLayout = ({ children }: { children: React.ReactNode }) => {
   const { id } = useParams<{ id: string }>();
@@ -25,7 +26,9 @@ const CourseLayout = ({ children }: { children: React.ReactNode }) => {
     <>
       <SidebarProvider>
         <CourseSidebar />
-        <SidebarInset>{children}</SidebarInset>
+        <ToggleLessonChatProvider>
+          <SidebarInset>{children}</SidebarInset>
+        </ToggleLessonChatProvider>
       </SidebarProvider>
     </>
   );

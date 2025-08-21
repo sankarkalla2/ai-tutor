@@ -6,7 +6,7 @@ import Link from "next/link";
 
 const UpgradeCard = () => {
   return (
-    <div className="bg-accent rounded-2xl py-6 px-3 border w-full max-w-sm">
+    <div className="bg-accent rounded-2xl py-6 px-4 border w-full max-w-sm">
       <div className="mb-4">
         <h2 className="text-xl font-semibold">Upgrade to Pro</h2>
         <p className="text-sm">Go for unlimited access.</p>
@@ -27,8 +27,8 @@ const UpgradeCard = () => {
             Advanced analytics
           </li>
         </ul>
-        <Button variant={"default"} className="cursor-pointer" asChild>
-          <Link href={"/pricng"}>
+        <Button variant={'primary'} className="cursor-pointer" asChild>
+          <Link href={"/pricing"}>
             <Sparkles />
             Upgrade
           </Link>

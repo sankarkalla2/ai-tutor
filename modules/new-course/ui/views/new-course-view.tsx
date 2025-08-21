@@ -51,11 +51,6 @@ export const NewCoursePageView = () => {
 
   return (
     <div className="min-h-screen mx-auto p-4 md:px-8 space-y-8">
-      {isMobile && (
-        <Button className="" variant={"outline"} onClick={toggleSidebar}>
-          <PanelRight />
-        </Button>
-      )}
       {isPending && <Loader />}
       <div className="max-w-2xl mx-auto pt-8">
         <div className="text-center mb-8">
@@ -64,7 +59,7 @@ export const NewCoursePageView = () => {
               2 of 2 courses
             </Badge>
             <Button
-              variant="outline"
+              variant={"dim"}
               size="sm"
               className="ml-4 bg-orange-500 text-white border-orange-500 hover:bg-orange-600"
             >
@@ -79,7 +74,7 @@ export const NewCoursePageView = () => {
           </p>
         </div>
 
-        <Card className="mb-6">
+        <Card className="mb-6" variant={'accent'}>
           <CardContent className="p-6">
             <div className="space-y-6">
               <div>
@@ -87,6 +82,7 @@ export const NewCoursePageView = () => {
                   What can I help you learn?
                 </label>
                 <Textarea
+                  variant={'md'}
                   value={topic}
                   onChange={(e) => setTopic(e.target.value)}
                   placeholder="Enter a topic"

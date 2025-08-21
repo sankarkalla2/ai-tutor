@@ -10,7 +10,6 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { useSidebar } from "@/components/ui/sidebar";
-import { useToggleRightSide } from "../../hooks/use-toggle-right-sidebar";
 import { Button } from "@/components/ui/button";
 
 interface LessonHeaderProps {
@@ -36,10 +35,10 @@ export function LessonHeader({
       <Button variant={"ghost"} size={"icon"} onClick={toggleSidebar}>
         <PanelLeft onClick={toggleSidebar} className="" />
       </Button>
-      <div className="flex items-center justify-between w-full">
+      <div className="flex flex-col w-full gap-0.5 items-start justify-start">
         {/* Breadcrumb Navigation */}
-        <Breadcrumb>
-          <BreadcrumbList >
+        <Breadcrumb className="truncate">
+          <BreadcrumbList>
             <BreadcrumbItem>
               <BreadcrumbLink href="/" asChild>
                 <Home className="w-4 h-4 text-gray-500" />
@@ -53,18 +52,47 @@ export function LessonHeader({
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              <BreadcrumbLink href={`/course/${courseId}`}>{courseName}</BreadcrumbLink>
+              <BreadcrumbLink href={`/course/${courseId}`}>
+                {courseName}
+              </BreadcrumbLink>
             </BreadcrumbItem>
           </BreadcrumbList>
         </Breadcrumb>
 
         {/* Course Stats Badges */}
-        <div className="flex items-center space-x-3">
-          <Badge variant="secondary" className="bg-blue-100 text-blue-800">
+        <div className="flex items-center gap-x-2">
+          {/* <span className="bg-chart-1 text-blue-800 text-[0.67rem] py-0.3 rounded-full px-2">
+            {chaptersCount} Chapters
+          </span>
+          <span className="bg-chart-2  text-[0.67rem] py-0.3 rounded-full px-2">
+            {modulesCount} Modules
+          </span>
+          <span className="bg-green-600 text-white  text-[0.67rem] py-0.3 rounded-full px-2">
+            30% completed
+          </span> */}
+          <Badge
+            size="xs"
+            shape={"circle"}
+            variant={"info"}
+            appearance={"light"}
+          >
             {chaptersCount} Chapters
           </Badge>
-          <Badge variant="secondary" className="bg-green-100 text-green-800">
+          <Badge
+            size="xs"
+            shape={"circle"}
+            variant={"primary"}
+            appearance={'outline'}
+          >
             {modulesCount} Modules
+          </Badge>
+          <Badge
+            size="xs"
+            shape={"circle"}
+            appearance={"default"}
+            variant={"success"}
+          >
+            30% completed
           </Badge>
         </div>
       </div>

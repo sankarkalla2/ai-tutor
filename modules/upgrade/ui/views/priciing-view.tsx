@@ -90,7 +90,11 @@ export default function PricingView() {
                 }
               }
               return (
-                <Card key={plan.id} className="sm:px-6 sm:!py-12">
+                <Card
+                  key={plan.id}
+                  className=""
+                  variant={"accent"}
+                >
                   <CardHeader>
                     <CardTitle className="text-lg">{plan.name}</CardTitle>
                     <CardDescription>{plan.description}</CardDescription>
