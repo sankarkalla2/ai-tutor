@@ -6,7 +6,7 @@ import { z } from "zod";
 import { db } from "@/lib/db";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
-import { getUserActiveSubscription } from "@/app/server/user";
+import { getUserActiveSubscription } from "@/server/user";
 
 export const createQuestionsByTopic = async (
   format: "course" | "guide" | "roadmap",
@@ -37,7 +37,6 @@ export const createQuestionsByTopic = async (
       `,
     });
 
-    console.log("Generated questions:", JSON.stringify(object, null, 2));
 
     return object.questions;
   } catch (error) {
@@ -123,7 +122,6 @@ export const createCourseOverview = async (
     Focus on practical, actionable content that students can apply.`,
   });
 
-  console.log("Generated course overview:", JSON.stringify(object, null, 2));
 
   try {
     const course = await db.course.create({

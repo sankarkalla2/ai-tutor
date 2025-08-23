@@ -1,4 +1,4 @@
-import { getUserActiveSubscription } from "@/app/server/user";
+import { getUserActiveSubscription } from "@/server/user";
 import { db } from "@/lib/db";
 import { lesson_QA_TutorPrompt } from "@/lib/prompts/lesson-prompt";
 import { openai } from "@ai-sdk/openai";

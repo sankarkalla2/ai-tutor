@@ -1,8 +1,8 @@
-import Loader from "@/components/loader";
-import Spinner from "@/components/spinner";
+"use client";
+import { CourseViewIdLoading } from "@/modules/courses/components/course-view-id-loading";
 
-const LadingPage = () => {
-  return <Loader />;
+const Loading = () => {
+  return <CourseViewIdLoading />;
 };
 
-export default LadingPage;
+export default Loading;

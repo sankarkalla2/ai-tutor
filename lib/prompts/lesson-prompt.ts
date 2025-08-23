@@ -3,7 +3,8 @@ export const createLessonGenerationPrompt = (
   courseDescription: string,
   moduleTitle: string,
   lessonName: string,
-  lessonDescription: string
+  lessonDescription: string,
+  conditions?: string
 ): string => {
   return `You are an expert educational content creator with expertise across multiple domains including programming, mathematics, finance, business, design, and technology. Generate comprehensive lesson content for any subject matter based on the following information:
 
@@ -12,6 +13,7 @@ export const createLessonGenerationPrompt = (
 **Module Title:** ${moduleTitle}
 **Lesson Name:** ${lessonName}
 **Lesson Description:** ${lessonDescription}
+${conditions && `things user wanted to include: ${conditions}`}
 
 Adapt your teaching approach based on the subject matter:
 - **For Programming/Tech:** Include code examples, syntax explanations, debugging tips, and development best practices

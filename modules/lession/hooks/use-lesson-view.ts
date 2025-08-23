@@ -3,11 +3,11 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { toast } from "sonner";
 import {
-  generateQuizQuestions,
   getLessionById,
   toggleLessionStatus,
 } from "@/modules/lession/server/lesson";
 import { useRouter } from "next/navigation";
+import { getCoursePreiview } from "@/modules/courses/server/courses";
 
 export const useLessonView = (lessonId: string, courseId: string) => {
   const [open, setOpen] = useState(false);
@@ -20,15 +20,30 @@ export const useLessonView = (lessonId: string, courseId: string) => {
     queryKey: ["get-lesson-by-id", lessonId],
     queryFn: async () => await getLessionById(lessonId, courseId),
   });
-  const { data: quiz, isLoading: isQuizLoading } = useQuery({
-    queryKey: ["generate-quiz", lessonId],
-    queryFn: async () => await generateQuizQuestions(lessonId),
+
+  const { data: courseIndex, isLoading: isLoadingCourse } = useQuery({
+    queryKey: ["get-course-preview", courseId],
+    queryFn: () => getCoursePreiview(courseId),
   });
 
-  
-  const generateQuiz = async() => {
+  let prevLessonId = undefined;
+  let nextLessonId = undefined;
+  let currentLessonId = lessonId;
 
-    
+  if (courseIndex?.course) {
+    const allLessons = courseIndex.course.modules.flatMap(
+      (module) => module.lessons
+    );
+    const currentIndex = allLessons.findIndex(
+      (lesson) => lesson.id === currentLessonId
+    );
+
+    if (currentIndex > 0) {
+      prevLessonId = allLessons[currentIndex - 1].id;
+    }
+    if (currentIndex >= 0 && currentIndex < allLessons.length - 1) {
+      nextLessonId = allLessons[currentIndex + 1].id;
+    }
   }
 
   // Auto-generate lesson if not yet generated
@@ -114,109 +129,6 @@ export const useLessonView = (lessonId: string, courseId: string) => {
     },
   });
 
-  //   mutationKey: ["toggle-lession-status", lessonId],
-  //   mutationFn: async () => {
-  //     console.log("mutationFn running with lessonId:", lessonId);
-  //     return await toggleLessionStatus(lessonId);
-  //   },
-  //   onMutate: async () => {
-  //     console.log("onMutate running");
-
-  //     // Cancel ongoing queries so we don't overwrite optimistic updates
-  //     await queryClient.cancelQueries({
-  //       queryKey: ["get-lesson-by-id", lessonId],
-  //     });
-  //     await queryClient.cancelQueries({
-  //       queryKey: ["get-course-preview", courseId],
-  //     });
-
-  //     // Get previous data for rollback
-  //     const prevLessonData = queryClient.getQueryData([
-  //       "get-lesson-by-id",
-  //       lessonId,
-  //     ]);
-  //     const prevCoursePreview = queryClient.getQueryData([
-  //       "get-course-preview",
-  //       courseId,
-  //     ]);
-
-  //      // Optimistic update: course preview list
-  //     queryClient.setQueryData(
-  //       ["get-course-preview", courseId],
-  //       (oldData: any) => ({
-  //         ...oldData,
-  //         course: {
-  //           ...oldData.course,
-  //           modules: oldData.course.modules.map((module: any) => ({
-  //             ...module,
-  //             lession: module.lessons?.map((lession: any) => {
-  //               if (lession.id === lessonId) {
-  //                 console.log(lession);
-  //                 return {
-  //                   ...lession,
-  //                   status:
-  //                     lession.status === "COMPLETED"
-  //                       ? "GENERATED"
-  //                       : "COMPLETED",
-  //                 };
-  //               }
-  //               return lession;
-  //             }),
-  //           })),
-  //         },
-  //       })
-  //     );
-
-  //     // Optimistic update: lesson details
-  //     queryClient.setQueryData(
-  //       ["get-lesson-by-id", lessonId],
-  //       (oldData: any) => ({
-  //         ...oldData,
-  //         lesson: {
-  //           ...oldData.lesson,
-  //           status:
-  //             oldData?.lesson?.status === "COMPLETED"
-  //               ? "GENERATED"
-  //               : "COMPLETED",
-  //         },
-  //       })
-  //     );
-
-  //     // Pass rollback data to onError
-  //     return { prevLessonData, prevCoursePreview };
-  //   },
-  //   onError: (err, _, context) => {
-  //     console.error("Mutation failed, rolling back:", err);
-  //     if (context?.prevLessonData) {
-  //       queryClient.setQueryData(
-  //         ["get-lesson-by-id", lessonId],
-  //         context.prevLessonData
-  //       );
-  //     }
-  //     if (context?.prevCoursePreview) {
-  //       queryClient.setQueryData(
-  //         ["get-course-preview", courseId],
-  //         context.prevCoursePreview
-  //       );
-  //     }
-  //     toast.error("Something went wrong while updating lesson status.");
-  //   },
-  //   onSuccess: (data) => {
-  //     if (data.status !== 200) {
-  //       toast.error(data.message);
-  //     }
-  //   },
-  //   onSettled: () => {
-  //     // Refetch latest data from server
-  //     queryClient.invalidateQueries({
-  //       queryKey: ["get-lesson-by-id", lessonId],
-  //     });
-  //     queryClient.invalidateQueries({
-  //       queryKey: ["get-course-preview", courseId],
-  //     });
-  //   },
-  // });
-
   const generateLesson = async (
     regeneratePrompt?: string,
     regenerate?: boolean
@@ -289,5 +201,8 @@ export const useLessonView = (lessonId: string, courseId: string) => {
     setOpen,
     streamingText,
     isStreaming,
+    courseIndex,
+    prevLessonId,
+    nextLessonId,
   };
 };

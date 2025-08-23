@@ -1,22 +1,20 @@
 "use client";
 
 import type React from "react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Label } from "@/components/ui/label";
-import { toast } from "sonner";
-import { PanelRight, Sparkles } from "lucide-react";
+import { Sparkles } from "lucide-react";
+import { Textarea } from "@/components/ui/textarea";
 
 import { useCreateCourse } from "../../hooks/use-create-course";
 import AiQuestionsChat from "../components/ai-questions-chat";
 import Loader from "@/components/loader";
-import { Textarea } from "@/components/ui/textarea";
 import GetUserCourses from "@/components/courses/get-user-courses";
 import { useSidebar } from "@/components/ui/sidebar";
-import { getUserActiveSubscription } from "@/app/server/user";
-import { useQuery } from "@tanstack/react-query";
 
 export const NewCoursePageView = () => {
   const {
@@ -47,8 +45,6 @@ export const NewCoursePageView = () => {
     userSubscription,
   } = useCreateCourse();
 
-  const { isMobile, toggleSidebar } = useSidebar();
-
   return (
     <div className="min-h-screen mx-auto p-4 md:px-8 space-y-8">
       {isPending && <Loader />}
@@ -74,7 +70,7 @@ export const NewCoursePageView = () => {
           </p>
         </div>
 
-        <Card className="mb-6" variant={'accent'}>
+        <Card className="mb-6">
           <CardContent className="p-6">
             <div className="space-y-6">
               <div>
@@ -82,12 +78,10 @@ export const NewCoursePageView = () => {
                   What can I help you learn?
                 </label>
                 <Textarea
-                  variant={'md'}
+                  variant={"md"}
                   value={topic}
                   onChange={(e) => setTopic(e.target.value)}
                   placeholder="Enter a topic"
-                  disabled={isGetSubscriptionLoading || isLoading}
-                  className=""
                   required
                 />
               </div>
@@ -123,10 +117,7 @@ export const NewCoursePageView = () => {
                   disabled={disableCheckbox}
                   onCheckedChange={async (checked) => {
                     if (!topic) return;
-                    if (!userSubscription)
-                      return toast.error(
-                        "Please upgrade to get unlimted access"
-                      );
+                    if (!userSubscription) return;
                     if (checked && !questions.length) {
                       toast.message(
                         "You can answer questions to improve course efficiency"

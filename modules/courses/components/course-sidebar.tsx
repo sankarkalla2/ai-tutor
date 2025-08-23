@@ -44,10 +44,11 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 import { useCourseViewId } from "../hooks/use-course-view-id";
 import { NavUser } from "@/components/sidebar/nav-user";
-import { getUserActiveSubscription } from "@/app/server/user";
+import { getUserActiveSubscription } from "@/server/user";
 import { useQuery } from "@tanstack/react-query";
 import UpgradeCard from "@/components/upgrade-card";
 import { Button } from "@/components/ui/button";
+import UserFeedback from "@/components/user-feedback";
 export function CourseSidebar() {
   const pathname = usePathname();
   const params = useParams<{ id: string }>();
@@ -95,9 +96,17 @@ export function CourseSidebar() {
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton>
-              <BookOpen />
-              <span>AI Tutor</span>
+            <SidebarMenuButton size={"lg"}>
+              <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
+                <BookOpen className="size-4" />
+              </div>
+              <div className="grid flex-1 text-left text-sm leading-tight">
+                <span className="truncate font-medium">{"AI Tutor"}</span>
+                <span className="truncate text-xs">
+                  {"Heaven for learning"}
+                </span>
+              </div>
+              <PanelRight className="ml-auto" onClick={toggleSidebar} />
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
@@ -174,30 +183,34 @@ export function CourseSidebar() {
       </SidebarContent>
 
       <SidebarFooter>
-        <SidebarGroup className="group-data-[collapsible=icon]:hidden">
+        <SidebarGroup className="group-data-[collapsible=icon]:hidden p-0">
           {session.data?.user &&
             !userSubscription &&
             !isGetSubscriptionLoading && (
-              <SidebarMenu>
-                <div className="w-full bg-accent p-4 rounded-xl max-w-sm">
-                  <div>
-                    <div className="mb-4">
-                      <h2 className="text-xl font-semibold">Upgrade to Pro</h2>
-                      <p className="text-sm">Go for unlimited access.</p>
+              <SidebarMenu className="">
+                <SidebarMenuItem className="">
+                  <div className="w-full bg-accent p-4 rounded-xl max-w-sm">
+                    <div>
+                      <div className="mb-4">
+                        <h2 className="text-xl font-semibold">
+                          Upgrade to Pro
+                        </h2>
+                        <p className="text-sm">Go for unlimited access.</p>
+                      </div>
                     </div>
-                  </div>
 
-                  <Button
-                    variant={"primary"}
-                    className="cursor-pointer w-full"
-                    asChild
-                  >
-                    <Link href="/pricing">
-                      <Sparkles />
-                      Upgrade
-                    </Link>
-                  </Button>
-                </div>
+                    <Button
+                      variant={"primary"}
+                      className="cursor-pointer w-full"
+                      asChild
+                    >
+                      <Link href="/pricing">
+                        <Sparkles />
+                        Upgrade
+                      </Link>
+                    </Button>
+                  </div>
+                </SidebarMenuItem>
               </SidebarMenu>
             )}
         </SidebarGroup>
@@ -214,26 +227,34 @@ export function CourseSidebar() {
           </SidebarMenu>
         )}
 
-        {session.isPending ? (
-          <Skeleton className="w-full h-10" />
-        ) : session.data?.user ? (
-          <NavUser
-            avatar={session.data.user.image}
-            name={session.data.user.name}
-            email={session.data.user.email}
-          />
-        ) : (
-          <SidebarMenu>
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <UserFeedback email={session.data?.user?.email} />
+          </SidebarMenuItem>
+          {session.isPending ? (
+            <Skeleton className="w-full h-10" />
+          ) : session.data?.user ? (
+            <NavUser
+              avatar={session.data.user.image}
+              name={session.data.user.name}
+              email={session.data.user.email}
+            />
+          ) : (
             <SidebarMenuItem>
-              <SidebarMenuButton isActive className="font-semibold" asChild>
+              <SidebarMenuButton
+                isActive
+                className="font-semibold"
+                asChild
+                tooltip={"login"}
+              >
                 <Link href={"/sign-in"}>
-                  <LogIn className="mr-2 h-4 w-4" />
-                  Login
+                  <LogIn />
+                  <span className="">Login</span>
                 </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
-          </SidebarMenu>
-        )}
+          )}
+        </SidebarMenu>
       </SidebarFooter>
     </Sidebar>
   );

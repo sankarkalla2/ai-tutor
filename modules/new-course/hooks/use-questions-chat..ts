@@ -21,6 +21,7 @@ export const useQuestionsCht = ({
     setInput(e.target.value);
   };
 
+
   const handleSubmitOption = (option: string) => {
     if (!option.trim() || isComplete) return;
 

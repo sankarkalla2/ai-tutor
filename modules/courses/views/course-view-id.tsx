@@ -1,16 +1,17 @@
 "use client";
 
+import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { Card, CardContent } from "@/components/ui/card";
-import { CheckCircle2, Circle, CircleCheckBig, MoveRight } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
-import Spinner from "@/components/spinner";
-import CourseHeader from "../components/course-header";
+import { Circle, CircleCheckBig, MoveRight } from "lucide-react";
 
-import { useCourseViewId } from "../hooks/use-course-view-id";
-import Link from "next/link";
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+
 import { MobileSidebarToggleButton } from "@/components/mobile-sidebar-toggle-button";
+import ErrorPage from "@/components/error";
+import { useCourseViewId } from "../hooks/use-course-view-id";
+import { CourseViewIdLoading } from "../components/course-view-id-loading";
 const CourseViewIdPage = () => {
   const params = useParams<{ id: string }>();
   const router = useRouter();
@@ -23,14 +24,13 @@ const CourseViewIdPage = () => {
     progressPercentage,
   } = useCourseViewId(params.id);
 
-  if (isLoading)
-    return (
-      <div className="absolute inset-0 bg-white/60 z-10 flex items-center justify-center rounded-lg">
-        <Spinner />
-      </div>
-    );
+  if (isLoading) {
+    return <CourseViewIdLoading />;
+  }
 
-  if (isError) return <div>...error</div>;
+  if (isError) {
+    return <ErrorPage errorMessage="Error fetching course. Please try again" />;
+  }
 
   if (!data?.course) {
     toast.error(data?.message);

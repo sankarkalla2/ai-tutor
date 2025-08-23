@@ -1,7 +1,8 @@
-import Lessionview from "@/modules/lession/ui/views/lession-view";
+import Loading from "./loading";
+import LessonView from "@/modules/lession/ui/views/lession-view";
 
 const LessionPageIId = () => {
-  return <Lessionview />
+  return <LessonView />;
 };
 
 export default LessionPageIId;

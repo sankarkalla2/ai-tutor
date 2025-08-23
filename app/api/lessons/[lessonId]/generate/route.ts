@@ -8,7 +8,7 @@ import { streamObject } from "ai";
 import { z } from "zod";
 import { createLessonGenerationPrompt } from "@/lib/prompts/lesson-prompt";
 import { google } from "@ai-sdk/google";
-import { getUserActiveSubscription } from "@/app/server/user";
+import { getUserActiveSubscription } from "@/server/user";
 
 const LessonOutputSchema = z.object({
   lessonContent: z.string(),
@@ -116,7 +116,8 @@ export async function POST(
   { params }: { params: Promise<{ lessonId: string }> }
 ) {
   const body = await req.json();
-  console.log(body);
+  const { regeneratePrompt } = body;
+  console.log(regeneratePrompt);
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session?.user) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -156,9 +157,11 @@ export async function POST(
       lesson.module.course.description || "",
       lesson.module.title,
       lesson.title,
-      lesson.description
+      lesson.description,
+      regeneratePrompt
     ),
     maxOutputTokens: 50,
+
     onFinish: async (result) => {
       console.log(result);
       console.log(result.object?.lessonContent);

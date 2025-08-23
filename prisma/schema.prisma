@@ -116,6 +116,13 @@ model Lesson {
   user             User         @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
+model Feedback {
+  id        String   @id @default(uuid())
+  email     String?
+  feedback  String
+  createdAt DateTime @default(now())
+}
+
 enum LessonStatus {
   NOT_GENERATED
   GENERATED

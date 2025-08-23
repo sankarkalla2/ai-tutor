@@ -1,14 +1,15 @@
-import { useChat } from "@ai-sdk/react";
-import { BookOpen, FileText, Map } from "lucide-react";
+
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { BookOpen, FileText, Map } from "lucide-react";
+
 import {
   createCourseOverview,
   createQuestionsByTopic,
 } from "../server/create-course";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { getUserActiveSubscription } from "@/app/server/user";
+import { getUserActiveSubscription } from "@/server/user";
 
 type Format = "course" | "guide" | "roadmap";
 interface Message {

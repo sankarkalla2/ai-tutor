@@ -31,6 +31,9 @@ const GetUserCourses = () => {
     );
   }
 
+  if (data?.courses?.length === 0)
+    return <h1 className="text-center text-2xl font-bold">No courses found</h1>;
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 ">
       {data &&
@@ -53,14 +56,14 @@ const GetUserCourses = () => {
             <Card
               className="border hover:shadow-md transition-shadow duration-200 cursor-pointer"
               key={course.id}
-              variant={'accent'}
+              variant={"accent"}
             >
               <CardContent className="">
                 <CardHeader className="p-0 mb-4">
                   <CardTitle className="text-lg font-medium mb-2">
                     {course.title}
                   </CardTitle>
-                  <CardDescription className="text-gray-600 text-sm line-clamp-2">
+                  <CardDescription className="text-muted-foreground text-sm line-clamp-2">
                     {course.description}
                   </CardDescription>
                 </CardHeader>
@@ -98,7 +101,7 @@ const GetUserCourses = () => {
                 </div> */}
 
                 <div className="flex gap-2">
-                  <Button asChild size="sm" className="flex-1" variant={'mono'}>
+                  <Button asChild size="sm" className="flex-1" variant={"mono"}>
                     <Link href={`/course/${course.id}`}>
                       <ExternalLink className="w-4 h-4 mr-2" />
                       View Course

@@ -47,7 +47,22 @@ export const updateUserProfile = async (name?: string, imgUrl?: string) => {
 
     return { status: 200, message: "You profile Updated" };
   } catch (error) {
-    console.log(error)
+    console.log(error);
     return { status: 500, message: "Something went wrong. please try again." };
+  }
+};
+
+export const storeFeedback = async (feedback: string, email?: string) => {
+  try {
+    await db.feedback.create({
+      data: {
+        email: email,
+        feedback: feedback,
+      },
+    });
+
+    return { status: 200, message: "Thank you" };
+  } catch (error) {
+    return { status: 500, message: "Intervel server error" };
   }
 };

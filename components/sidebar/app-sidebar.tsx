@@ -2,23 +2,11 @@
 
 import * as React from "react";
 import {
-  AudioWaveform,
-  Book,
   BookOpen,
-  Bot,
-  Command,
-  Frame,
-  GalleryVerticalEnd,
   LogIn,
-  Map,
   MessagesSquare,
-  PanelLeft,
-  PieChart,
+  PanelRight,
   Plus,
-  Settings2,
-  SquareTerminal,
-  StarIcon,
-  StarsIcon,
 } from "lucide-react";
 
 import {
@@ -33,156 +21,16 @@ import {
   SidebarRail,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { TeamSwitcher } from "./theme-switcher";
 import { NavUser } from "./nav-user";
-import { NavProjects } from "./nav-projects";
 import Link from "next/link";
 import { authClient } from "@/lib/auth-client";
 import { Skeleton } from "../ui/skeleton";
-import { tool } from "ai";
 import { usePathname } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
-import { getUserActiveSubscription } from "@/app/server/user";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "../ui/card";
-import { Button } from "../ui/button";
-import { RippleButton } from "../animate-ui/buttons/ripple";
+import { getUserActiveSubscription } from "@/server/user";
 import UpgradeCard from "../upgrade-card";
-
-// This is sample data.
-const data = {
-  user: {
-    name: "shadcn",
-    email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
-  },
-  teams: [
-    {
-      name: "Acme Inc",
-      logo: GalleryVerticalEnd,
-      plan: "Enterprise",
-    },
-    {
-      name: "Acme Corp.",
-      logo: AudioWaveform,
-      plan: "Startup",
-    },
-    {
-      name: "Evil Corp.",
-      logo: Command,
-      plan: "Free",
-    },
-  ],
-  navMain: [
-    {
-      title: "Playground",
-      url: "#",
-      icon: SquareTerminal,
-      isActive: true,
-      items: [
-        {
-          title: "History",
-          url: "#",
-        },
-        {
-          title: "Starred",
-          url: "#",
-        },
-        {
-          title: "Settings",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Models",
-      url: "#",
-      icon: Bot,
-      items: [
-        {
-          title: "Genesis",
-          url: "#",
-        },
-        {
-          title: "Explorer",
-          url: "#",
-        },
-        {
-          title: "Quantum",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Documentation",
-      url: "#",
-      icon: BookOpen,
-      items: [
-        {
-          title: "Introduction",
-          url: "#",
-        },
-        {
-          title: "Get Started",
-          url: "#",
-        },
-        {
-          title: "Tutorials",
-          url: "#",
-        },
-        {
-          title: "Changelog",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Settings",
-      url: "#",
-      icon: Settings2,
-      items: [
-        {
-          title: "General",
-          url: "#",
-        },
-        {
-          title: "Team",
-          url: "#",
-        },
-        {
-          title: "Billing",
-          url: "#",
-        },
-        {
-          title: "Limits",
-          url: "#",
-        },
-      ],
-    },
-  ],
-  projects: [
-    {
-      name: "Design Engineering",
-      url: "#",
-      icon: Frame,
-    },
-    {
-      name: "Sales & Marketing",
-      url: "#",
-      icon: PieChart,
-    },
-    {
-      name: "Travel",
-      url: "#",
-      icon: Map,
-    },
-  ],
-};
+import UserFeedback from "../user-feedback";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const sidebarItems = [
   {
@@ -208,11 +56,21 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       queryKey: ["get-user-subscription"],
       queryFn: () => getUserActiveSubscription(),
     });
+  const isMobile = useIsMobile();
 
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
-        <TeamSwitcher teams={data.teams} />
+        <SidebarMenuButton size={"lg"}>
+          <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
+            <BookOpen className="size-4" />
+          </div>
+          <div className="grid flex-1 text-left text-sm leading-tight">
+            <span className="truncate font-medium">{"AI Tutor"}</span>
+            <span className="truncate text-xs">{"Heaven for learning"}</span>
+          </div>
+          <PanelRight className="ml-auto" onClick={toggleSidebar} />
+        </SidebarMenuButton>
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
@@ -251,33 +109,39 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           {session.data?.user &&
             !userSubscription &&
             !isGetSubscriptionLoading && (
-              <SidebarMenu className="p-0">
-                <UpgradeCard />
+              <SidebarMenu className="">
+                <SidebarMenuItem className="">
+                  <UpgradeCard />
+                </SidebarMenuItem>
               </SidebarMenu>
             )}
         </SidebarGroup>
-        {!open && (
+        {!open && !isMobile && (
           <SidebarMenu>
             <SidebarMenuItem>
               <SidebarMenuButton
-                tooltip={"Toggle Sidebar"}
                 onClick={toggleSidebar}
+                tooltip={"Open sidebar ctrl+b"}
               >
-                <PanelLeft />
+                <PanelRight />
               </SidebarMenuButton>
             </SidebarMenuItem>
           </SidebarMenu>
         )}
-        {session.isPending ? (
-          <Skeleton className="w-full h-10" />
-        ) : session.data?.user ? (
-          <NavUser
-            avatar={session.data.user.image}
-            name={session.data.user.name}
-            email={session.data.user.email}
-          />
-        ) : (
-          <SidebarMenu>
+
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <UserFeedback email={session.data?.user?.email} />
+          </SidebarMenuItem>
+          {session.isPending ? (
+            <Skeleton className="w-full h-10" />
+          ) : session.data?.user ? (
+            <NavUser
+              avatar={session.data.user.image}
+              name={session.data.user.name}
+              email={session.data.user.email}
+            />
+          ) : (
             <SidebarMenuItem>
               <SidebarMenuButton
                 isActive
@@ -291,8 +155,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
-          </SidebarMenu>
-        )}
+          )}
+        </SidebarMenu>
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>

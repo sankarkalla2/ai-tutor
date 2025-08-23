@@ -1,6 +1,6 @@
 "use server";
 
-import { getUserActiveSubscription } from "@/app/server/user";
+import { getUserActiveSubscription } from "@/server/user";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { google } from "@ai-sdk/google";

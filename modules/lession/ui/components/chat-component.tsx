@@ -14,6 +14,7 @@ import { cn } from "@/lib/utils";
 import { LoadingIndicator } from "./loading-indicator";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Textarea } from "@/components/ui/textarea";
+import LessonChatLoadingSkeleton from "./chat-loading-skeleton";
 
 interface LessonViewChatProps {
   className?: string;
@@ -30,10 +31,9 @@ export const LessonViewChat: React.FC<LessonViewChatProps> = ({
     params.id
   );
 
-  const { messages, sendMessage, status,  } = useChat({
+  const { messages, sendMessage, status } = useChat({
     transport: new DefaultChatTransport({
       api: `/api/chat/${params.lessonId}`,
-      
     }),
   });
 
@@ -70,6 +70,9 @@ export const LessonViewChat: React.FC<LessonViewChatProps> = ({
         Error loading lesson: {"Unknown error"}
       </div>
     );
+  }
+  if (isLoading) {
+    return <LessonChatLoadingSkeleton />;
   }
 
   return (

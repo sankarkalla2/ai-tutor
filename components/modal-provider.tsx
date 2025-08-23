@@ -37,6 +37,7 @@ export const ModalProvider = ({
           <DialogTitle>{title}</DialogTitle>
           {description && <DialogDescription>{description}</DialogDescription>}
         </DialogHeader>
+
         <DialogBody>{children}</DialogBody>
       </DialogContent>
     </Dialog>
