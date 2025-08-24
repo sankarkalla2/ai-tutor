@@ -14,12 +14,13 @@ export async function POST(
   const { messages, userId }: { messages: UIMessage[]; userId: string } =
     await req.json();
   const userSubscription = await getUserActiveSubscription();
-  if (!userSubscription) {
-    return NextResponse.json(
-      { message: "Upgrade to get unlimited access" },
-      { status: 403 }
-    );
-  }
+  console.log('called')
+  // if (!userSubscription) {
+  //   return NextResponse.json(
+  //     { message: "Upgrade to get unlimited access" },
+  //     { status: 403 }
+  //   );
+  // }
 
   const lesson = await db.lesson.findUnique({
     where: {

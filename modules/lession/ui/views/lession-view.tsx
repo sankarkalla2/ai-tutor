@@ -33,7 +33,7 @@ import { Separator } from "@/components/ui/separator";
 import { DialogClose, DialogFooter } from "@/components/ui/dialog";
 
 import { useLessonView } from "../../hooks/use-lesson-view";
-import { Response } from "@/components/markdown-content";
+// import { Response } from "@/components/markdown-content";
 import { ModalProvider } from "@/components/modal-provider";
 import { LessonViewChat } from "../components/chat-component";
 import { LessonHeader } from "../components/lesson-header";
@@ -42,6 +42,7 @@ import { useToggleLessonChat } from "../../providers/store-provier";
 import QuizPage from "../components/lesson-quiz-page";
 import ErrorPage from "@/components/error";
 import { LessonContentSkeleton } from "../components/lesson-content-skeleton";
+import { Response } from "@/components/ai-elements/response";
 
 const LessonView = () => {
   const params = useParams<{ id: string; lessonId: string }>();

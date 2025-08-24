@@ -1,31 +1,17 @@
 "use client";
-import { CourseSidebar } from "@/modules/courses/components/course-sidebar";
+import { AppSidebar } from "@/components/sidebar/app-sidebar";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
-import React, { useState } from "react";
 
-import { Home, MessageCircle } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { useCourseViewId } from "@/modules/courses/hooks/use-course-view-id";
-import { useParams } from "next/navigation";
-import { MobileSidebarToggleButton } from "@/components/mobile-sidebar-toggle-button";
+import { CourseSidebar } from "@/modules/courses/components/course-sidebar";
 import { ToggleLessonChatProvider } from "@/modules/lession/providers/store-provier";
+import { usePathname } from "next/navigation";
 
 const CourseLayout = ({ children }: { children: React.ReactNode }) => {
-  const { id } = useParams<{ id: string }>();
-  const {
-    data,
-    isLoading,
-    isError,
-    totalLessons,
-    completedLessons,
-    progressPercentage,
-  } = useCourseViewId(id);
-
-  if (!data?.course) return null;
+  const pathname = usePathname();
   return (
     <>
       <SidebarProvider>
-        <CourseSidebar />
+        {pathname.includes("/chat") ? <AppSidebar /> : <CourseSidebar />}
         <ToggleLessonChatProvider>
           <SidebarInset>{children}</SidebarInset>
         </ToggleLessonChatProvider>

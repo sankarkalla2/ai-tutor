@@ -66,7 +66,7 @@ export function CourseSidebar() {
     return (
       <Sidebar collapsible="icon">
         <SidebarHeader>
-          <Skeleton className="h-6 w-24" />
+          <Skeleton className="h-6 w-full" />
         </SidebarHeader>
         <SidebarContent>
           <SidebarGroup>
