@@ -16,7 +16,7 @@ import {
   FormMessage,
 } from "./ui/form";
 import {
-  DialogBody,
+  
   DialogClose,
   DialogFooter,
 } from "./ui/dialog";
@@ -89,7 +89,7 @@ const UserFeedback = ({ email }: UserFeedbackProps) => {
     >
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
-          <DialogBody className="space-y-2">
+          <div className="space-y-2">
             <div>
               <FormField
                 control={form.control}
@@ -131,7 +131,7 @@ const UserFeedback = ({ email }: UserFeedbackProps) => {
                 </FormItem>
               )}
             />
-          </DialogBody>
+          </div>
           <DialogFooter>
             <DialogClose asChild>
               <Button type="button" variant="outline">

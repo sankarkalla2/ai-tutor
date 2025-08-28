@@ -9,9 +9,10 @@ const useSignIn = () => {
   const signInWithMagicLink = async () => {
     if (!email) toast.error("Please enter your email address");
 
-    await signIn.magicLink(
+    const data = await signIn.magicLink(
       {
         email,
+        callbackURL: "/new",
       },
       {
         onRequest: (ctx) => {
@@ -22,6 +23,8 @@ const useSignIn = () => {
         },
       }
     );
+    if (data.data) toast.success("Email sent successfully");
+    if (data.error) toast.error("Something went wrong. please try again");
   };
 
   const signInWithSocials = async (provider: "google" | "github") => {

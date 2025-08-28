@@ -8,15 +8,10 @@ import { MobileSidebarToggleButton } from "@/components/mobile-sidebar-toggle-bu
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <SidebarProvider>
+    <SidebarProvider >
       <AppSidebar />
       <SidebarInset>
-        <main className="w-full">
-          <div className="p-4">
-            <MobileSidebarToggleButton />
-          </div>
-          {children}
-        </main>
+        <main className="w-full">{children}</main>
       </SidebarInset>
     </SidebarProvider>
   );

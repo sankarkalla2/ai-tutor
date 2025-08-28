@@ -17,7 +17,14 @@ import {
 import { useEffect, useState } from "react";
 import { useChat } from "@ai-sdk/react";
 import { Response } from "@/components/ai-elements/response";
-import { ArrowLeft, GlobeIcon, History, Home, MessageSquarePlus, Plus } from "lucide-react";
+import {
+  ArrowLeft,
+  GlobeIcon,
+  History,
+  Home,
+  MessageSquarePlus,
+  Plus,
+} from "lucide-react";
 import {
   Source,
   Sources,
@@ -83,22 +90,22 @@ const ChatWithCourseView = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-4 md:px-6 md:pt-4 pb-9 relative size-full h-screen">
+    <div className="max-w-4xl mx-auto p-4 md:px-6 md:pb-10 relative size-full h-screen">
       <div className="flex items-center justify-between">
         <div>
           <div className="flex items-center gap-2">
             <MobileSidebarToggleButton />
-            <Button className="md:hidden" size={'sm'} variant={'outline'}>
-                <ArrowLeft />
-                Home
+            <Button className="md:hidden" size={"sm"} variant={"outline"}>
+              <ArrowLeft />
+              Home
             </Button>
           </div>
         </div>
         <div className="flex items-center gap-x-2">
-         <Button size={'sm'} variant={'secondary'}>
+          <Button size={"sm"} variant={"secondary"}>
             <History />
             History
-         </Button>
+          </Button>
           <PickCoursesCommand courseId={params.id} />
         </div>
       </div>

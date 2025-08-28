@@ -11,7 +11,10 @@ import {
   webhooks,
 } from "@polar-sh/better-auth";
 import { polarClient } from "./polar";
+import { Resend } from "resend";
+import { toast } from "sonner";
 
+const resend = new Resend(process.env.RESEND_API_KEY);
 export const auth = betterAuth({
   database: prismaAdapter(db, {
     provider: "postgresql", // or "mysql", "postgresql", ...etc
@@ -32,6 +35,17 @@ export const auth = betterAuth({
       async sendMagicLink(data) {
         // Send an email to the user with a magic link
         console.log(data);
+        const { data: mailData, error } = await resend.emails.send({
+          from: "Acme <onboarding@resend.dev>",
+          to: ["gowrisankarkalla4@gmail.com"],
+          subject: "Hello World",
+          html: `<a href=${data.url}>click to login </a>`,
+        });
+
+        if (error) {
+          console.log(error.message);
+          toast.error("something went wrong");
+        }
       },
     }),
     passkey(),

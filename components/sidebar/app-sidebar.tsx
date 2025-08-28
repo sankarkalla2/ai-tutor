@@ -3,6 +3,7 @@
 import * as React from "react";
 import {
   BookOpen,
+  Bot,
   LogIn,
   MessagesSquare,
   PanelRight,
@@ -34,17 +35,23 @@ import { useIsMobile } from "@/hooks/use-mobile";
 
 const sidebarItems = [
   {
-    title: "Chat With Course",
-    url: "/chat",
-    icon: MessagesSquare,
-    tooltip: "Create New Course",
-  },
-  {
     title: "My Courses",
     url: "/courses",
     icon: BookOpen,
     tooltip: "My Courses",
   },
+  {
+    title: "Chat With Course",
+    url: "/chat/courses",
+    icon: MessagesSquare,
+    tooltip: "Create New Course",
+  },
+  {
+    title: 'Ask Tutor',
+    url: '/chat/tutor',
+    icon: Bot,
+    tooltip: 'Ask Tutor'
+  }
 ];
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
@@ -59,7 +66,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const isMobile = useIsMobile();
 
   return (
-    <Sidebar collapsible="icon" {...props}>
+    <Sidebar collapsible="icon" {...props} variant='sidebar'>
       <SidebarHeader>
         <SidebarMenuButton size={"lg"}>
           <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
@@ -92,7 +99,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 <SidebarMenuButton
                   asChild
                   tooltip={item.tooltip}
-                  isActive={pathname.includes(item.url)}
+                  isActive={pathname.startsWith(item.url)}
                 >
                   <Link href={item.url}>
                     <item.icon />
