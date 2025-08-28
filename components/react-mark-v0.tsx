@@ -633,7 +633,7 @@ export default function MarkdownRenderer() {
               </CardHeader>
               <CardContent className="space-y-2">
                 <Button
-                  variant={selectedLesson === "physics" ? "default" : "outline"}
+                  variant={selectedLesson === "physics" ? "primary" : "outline"}
                   className="w-full justify-start"
                   onClick={() => setSelectedLesson("physics")}
                 >
@@ -642,7 +642,7 @@ export default function MarkdownRenderer() {
                 </Button>
                 <Button
                   variant={
-                    selectedLesson === "programming" ? "default" : "outline"
+                    selectedLesson === "programming" ? "primary" : "outline"
                   }
                   className="w-full justify-start"
                   onClick={() => setSelectedLesson("programming")}
@@ -652,7 +652,7 @@ export default function MarkdownRenderer() {
                 </Button>
                 <Button
                   variant={
-                    selectedLesson === "chemistry" ? "default" : "outline"
+                    selectedLesson === "chemistry" ? "primary" : "outline"
                   }
                   className="w-full justify-start"
                   onClick={() => setSelectedLesson("chemistry")}
