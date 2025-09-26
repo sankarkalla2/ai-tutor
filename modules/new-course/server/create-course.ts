@@ -7,6 +7,7 @@ import { db } from "@/lib/db";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { getUserActiveSubscription } from "@/server/user";
+import { gateway } from "@ai-sdk/gateway";
 
 export const createQuestionsByTopic = async (
   format: "course" | "guide" | "roadmap",
@@ -70,7 +71,7 @@ export const createCourseOverview = async (
   }
 
   const { object } = await generateObject({
-    model: google("gemini-2.0-flash"),
+    model: gateway('openai/gpt-5'),
     providerOptions: {
       google: {
         structuredOutputs: true,
