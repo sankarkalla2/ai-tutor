@@ -9,14 +9,22 @@ import {
   CardDescription,
   CardFooter,
 } from "@/components/ui/card";
+import {
+  Field,
+  FieldDescription,
+  FieldGroup,
+  FieldLabel,
+  FieldSeparator,
+} from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 
-
 import useSignIn from "../hooks/use-sign-in";
 import { Key, Loader2, MoveLeft } from "lucide-react";
+import { Separator } from "@/components/ui/separator";
+import { useSearchParams } from "next/navigation";
 
 export const SignInView = () => {
   const {
@@ -28,9 +36,12 @@ export const SignInView = () => {
     loading,
   } = useSignIn();
 
+
+
+
   return (
     <div className="max-h-screen w-full pt-32">
-      <div className="max-w-md mx-auto space-y-2">
+      <div className="max-w-sm mx-auto space-y-2">
         <Button asChild size={"sm"} variant={"outline"}>
           <Link href={"/"}>
             <MoveLeft className="h-4 w-4" />
@@ -38,54 +49,15 @@ export const SignInView = () => {
           </Link>
         </Button>
         <Card className="">
-          <CardHeader>
-            <CardTitle className="text-lg md:text-xl">Sign In</CardTitle>
-            <CardDescription className="text-xs md:text-sm">
-              Enter your email below to login to your account
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="grid gap-4">
-              <div className="grid gap-2">
-                <Label htmlFor="email">Email</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="m@example.com"
-                  required
-                  onChange={(e) => {
-                    setEmail(e.target.value);
-                  }}
-                  value={email}
-                />
-                <Button
-                  disabled={loading}
-                  className="gap-2"
-                  onClick={signInWithMagicLink}
-                >
-                  {loading ? (
-                    <Loader2 size={16} className="animate-spin" />
-                  ) : (
-                    <> Sign-in with Magic Link</>
-                  )}
-                </Button>
-              </div>
-
-              <div
-                className={cn(
-                  "w-full gap-2 flex items-center",
-                  "justify-between flex-col"
-                )}
-              >
-                <Button
-                  variant="secondary"
-                  disabled={loading}
-                  className="gap-2 w-full"
-                  onClick={signInWithPasskey}
-                >
-                  <Key size={16} />
-                  Sign-in with Passkey
-                </Button>
+          <CardContent className="space-y-3">
+            <div className="flex flex-col justify-center items-center">
+              <CardTitle className="text-2xl">Sign In</CardTitle>
+              <CardDescription>
+                Welcome back! Please sign in to your account.
+              </CardDescription>
+            </div>
+            <FieldGroup>
+              <Field>
                 <Button
                   variant="outline"
                   className={cn("w-full gap-2 mt-2")}
@@ -118,26 +90,53 @@ export const SignInView = () => {
                   </svg>
                   Sign in with Google
                 </Button>
-              </div>
+                <Button
+                  variant="secondary"
+                  disabled={loading}
+                  className="gap-2 w-full"
+                  onClick={signInWithPasskey}
+                >
+                  <Key size={16} />
+                  Sign-in with Passkey
+                </Button>
+              </Field>
+            </FieldGroup>
+            <FieldSeparator className="*:data-[slot=field-separator-content]:bg-card mt-2">
+              Or continue with
+            </FieldSeparator>
+
+            <div className="grid gap-1 mt-4">
+              <Field>
+                <FieldLabel htmlFor="email">Email</FieldLabel>
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="m@example.com"
+                  required
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                  }}
+                  value={email}
+                />
+              </Field>
+              <Button
+                disabled={loading}
+                className="gap-2"
+                onClick={signInWithMagicLink}
+              >
+                {loading ? (
+                  <Loader2 size={16} className="animate-spin" />
+                ) : (
+                  <> Sign-in with Magic Link</>
+                )}
+              </Button>
             </div>
           </CardContent>
-          <CardFooter>
-            <div className="flex justify-center w-full border-t py-4">
-              <p className="text-center text-xs text-neutral-500">
-                By signing up, you agree to our{" "}
-                <Link
-                  href="https://better-auth.com"
-                  className="underline"
-                  target="_blank"
-                >
-                  <span className="dark:text-white/70 cursor-pointer">
-                    ai tutor
-                  </span>
-                </Link>
-              </p>
-            </div>
-          </CardFooter>
         </Card>
+        <FieldDescription className="px-6 text-center">
+          By clicking continue, you agree to our{" "}
+          <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.
+        </FieldDescription>
       </div>
     </div>
   );

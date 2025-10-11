@@ -19,6 +19,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarMenuSkeleton,
   SidebarRail,
   useSidebar,
 } from "@/components/ui/sidebar";
@@ -47,11 +48,11 @@ const sidebarItems = [
     tooltip: "Create New Course",
   },
   {
-    title: 'Ask Tutor',
-    url: '/chat/tutor',
+    title: "Ask Tutor",
+    url: "/chat/tutor",
     icon: Bot,
-    tooltip: 'Ask Tutor'
-  }
+    tooltip: "Ask Tutor",
+  },
 ];
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
@@ -66,16 +67,20 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const isMobile = useIsMobile();
 
   return (
-    <Sidebar collapsible="icon" {...props} variant='sidebar'>
+    <Sidebar collapsible="icon" {...props} variant="sidebar">
       <SidebarHeader>
-        <SidebarMenuButton size={"lg"}>
-          <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
-            <BookOpen className="size-4" />
-          </div>
-          <div className="grid flex-1 text-left text-sm leading-tight">
-            <span className="truncate font-medium">{"AI Tutor"}</span>
-            <span className="truncate text-xs">{"Heaven for learning"}</span>
-          </div>
+        <SidebarMenuButton size={"lg"} variant={"outline"}>
+          <Link href={"/"}>
+            <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
+              <BookOpen className="size-4" />
+            </div>
+          </Link>
+          <Link href={"/"}>
+            <div className="grid flex-1 text-left text-sm leading-tight">
+              <span className="truncate font-medium">{"AI Tutor"}</span>
+              <span className="truncate text-xs">{"Heaven for learning"}</span>
+            </div>
+          </Link>
           <PanelRight className="ml-auto" onClick={toggleSidebar} />
         </SidebarMenuButton>
       </SidebarHeader>
@@ -141,7 +146,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             <UserFeedback email={session.data?.user?.email} />
           </SidebarMenuItem>
           {session.isPending ? (
-            <Skeleton className="w-full h-10" />
+            <SidebarMenuItem>
+              <Skeleton className="h-10 w-full rounded-md bg-background" />
+            </SidebarMenuItem>
           ) : session.data?.user ? (
             <NavUser
               avatar={session.data.user.image}

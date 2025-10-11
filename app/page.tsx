@@ -4,6 +4,7 @@ import remarkGfm from "remark-gfm";
 import rehypeRaw from "rehype-raw";
 import { cn } from "@/lib/utils"; // merge Tailwind classes
 
+
 const markdownContent = `
 # The Landscape of Choice
 

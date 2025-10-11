@@ -45,16 +45,26 @@ const CourseViewIdPage = () => {
         <MobileSidebarToggleButton />
         <div className="space-x-2">
           <div className="flex items-center justify-between">
-            <h1 className="text-3xl font-bold">{data?.course?.title}</h1>
-            <Badge variant="secondary" className="text-sm">
-              {progressPercentage}% Complete
-            </Badge>
+            <h1 className="text-3xl font-bold truncate">
+              {data?.course?.title}
+            </h1>
           </div>
 
-          <div className="flex items-center gap-6 text-sm text-muted-foreground">
-            <span>{data?.course?.modules.length} modules</span>
-            <span>{totalLessons} lessons</span>
-            <span>{completedLessons} completed</span>
+          <div className="flex items-center text-sm text-muted-foreground justify-between">
+            <div className="flex items-center gap-x-4">
+              <Badge size={"sm"} variant={"info"} appearance={"outline"}>
+                {data?.course?.modules.length} modules
+              </Badge>
+              <Badge size={"sm"} variant={"primary"} appearance={"outline"}>
+                {totalLessons} lessons
+              </Badge>
+              <Badge size={"sm"} variant={"success"} appearance={"outline"}>
+                {completedLessons} completed
+              </Badge>
+            </div>
+            <Badge variant="secondary" className="truncate" size="sm">
+              {progressPercentage}% completed
+            </Badge>
           </div>
         </div>
 
@@ -76,7 +86,11 @@ const CourseViewIdPage = () => {
                     Module {moduleIndex + 1}: {module.title}
                   </h2>
                   <div className="flex items-center gap-3">
-                    <Badge variant="outline" className="hidden md:flex">
+                    <Badge
+                      variant={"info"}
+                      className="hidden md:flex"
+                      appearance={"outline"}
+                    >
                       {moduleCompleted} / {moduleTotal} completed
                     </Badge>
                     <Badge variant="secondary" className="text-sm">

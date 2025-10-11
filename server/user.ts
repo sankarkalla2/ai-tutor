@@ -12,8 +12,11 @@ export const getAllPlans = async () => {
     sorting: ["price_amount"],
   });
 
+
   return products.result.items;
 };
+
+
 
 export const getUserActiveSubscription = async () => {
   const session = await auth.api.getSession({

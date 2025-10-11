@@ -35,6 +35,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarMenuSkeleton,
   SidebarMenuSub,
   SidebarMenuSubButton,
   SidebarMenuSubItem,
@@ -66,25 +67,52 @@ export function CourseSidebar() {
     return (
       <Sidebar collapsible="icon">
         <SidebarHeader>
-          <Skeleton className="h-6 w-full" />
+          <SidebarMenu>
+            <SidebarMenuItem>
+              <SidebarMenuButton size={"lg"} variant={"outline"}>
+                <Link href={"/"}>
+                  <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
+                    <BookOpen className="size-4" />
+                  </div>
+                </Link>
+                <Link href={"/"}>
+                  <div className="grid flex-1 text-left text-sm leading-tight">
+                    <span className="truncate font-medium">{"AI Tutor"}</span>
+                    <span className="truncate text-xs">
+                      {"Heaven for learning"}
+                    </span>
+                  </div>
+                </Link>
+                <PanelRight className="ml-auto" onClick={toggleSidebar} />
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          </SidebarMenu>
         </SidebarHeader>
         <SidebarContent>
           <SidebarGroup>
-            <SidebarGroupLabel>
-              <Skeleton className="h-4 w-20" />
-            </SidebarGroupLabel>
+            <SidebarGroupLabel>Course Content</SidebarGroupLabel>
             <SidebarGroupContent>
               {[...Array(3)].map((_, i) => (
                 <div key={i} className="mb-4">
-                  <Skeleton className="h-5 w-32 mb-2" />
+                  <SidebarMenuSkeleton className="h-6 w-full mb-2" />
                   {[...Array(4)].map((_, j) => (
-                    <Skeleton key={j} className="h-4 w-28 ml-4 mb-1" />
+                    <SidebarMenuSkeleton
+                      key={j}
+                      className="h-6 w-full ml-4 mb-1"
+                    />
                   ))}
                 </div>
               ))}
             </SidebarGroupContent>
           </SidebarGroup>
         </SidebarContent>
+        <SidebarFooter>
+          <SidebarMenu>
+            <SidebarMenuItem>
+              <Skeleton className="h-10 w-full rounded-md bg-muted" />
+            </SidebarMenuItem>
+          </SidebarMenu>
+        </SidebarFooter>
       </Sidebar>
     );
   }
@@ -96,16 +124,20 @@ export function CourseSidebar() {
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton size={"lg"}>
-              <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
-                <BookOpen className="size-4" />
-              </div>
-              <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-medium">{"AI Tutor"}</span>
-                <span className="truncate text-xs">
-                  {"Heaven for learning"}
-                </span>
-              </div>
+            <SidebarMenuButton size={"lg"} variant={"outline"}>
+              <Link href={"/"}>
+                <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
+                  <BookOpen className="size-4" />
+                </div>
+              </Link>
+              <Link href={"/"}>
+                <div className="grid flex-1 text-left text-sm leading-tight">
+                  <span className="truncate font-medium">{"AI Tutor"}</span>
+                  <span className="truncate text-xs">
+                    {"Heaven for learning"}
+                  </span>
+                </div>
+              </Link>
               <PanelRight className="ml-auto" onClick={toggleSidebar} />
             </SidebarMenuButton>
           </SidebarMenuItem>

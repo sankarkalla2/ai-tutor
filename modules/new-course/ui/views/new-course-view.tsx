@@ -50,7 +50,7 @@ export const NewCoursePageView = () => {
       {isPending && <Loader />}
       <div className="max-w-2xl mx-auto pt-8">
         <div className="text-center mb-8">
-          <div className="flex items-center justify-center mb-4">
+          {/* <div className="flex items-center justify-center mb-4">
             <Badge variant="secondary" className="text-xs">
               2 of 2 courses
             </Badge>
@@ -61,7 +61,7 @@ export const NewCoursePageView = () => {
             >
               Need more? Upgrade
             </Button>
-          </div>
+          </div> */}
           <h1 className="text-4xl font-bold mb-2">
             What can I help you learn?
           </h1>
@@ -85,32 +85,7 @@ export const NewCoursePageView = () => {
                   required
                 />
               </div>
-              {/* 
-              <div>
-                <label className="block text-sm font-medium mb-3">
-                  Choose the format
-                </label>
-                <div className="grid grid-cols-3 gap-3">
-                  {formats.map((format) => {
-                    const Icon = format.icon;
-                    return (
-                      <button
-                        key={format.id}
-                        type="button"
-                        onClick={() => setSelectedFormat(format.id)}
-                        className={`p-4 border rounded-lg text-center transition-colors ${
-                          selectedFormat === format.id
-                            ? "border-blue-500 bg-background"
-                            : "border-gray-200 hover:border-gray-300"
-                        }`}
-                      >
-                        <Icon className="w-8 h-8 mx-auto mb-2 " />
-                        <div className="font-medium">{format.name}</div>
-                      </button>
-                    );
-                  })}
-                </div>
-              </div> */}
+
               <div className="flex items-center gap-3">
                 <Checkbox
                   checked={enableQuestions}
