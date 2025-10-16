@@ -70,6 +70,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     <Sidebar collapsible="icon" {...props} variant="sidebar">
       <SidebarHeader>
         <SidebarMenuButton size={"lg"} variant={"outline"} isActive>
+          
           <Link href={"/new"}>
             <div className=" flex aspect-square size-8 items-center justify-center rounded-lg border-dashed">
               <BookOpen className="size-4" />

@@ -11,6 +11,7 @@ export const createToggleLessonChatStore = (initialOpen: boolean) =>
   createStore<ToggleRightSideProps>()((set) => ({
     isOpen: initialOpen,
     toggleOpen: () => set((state) => ({ isOpen: !state.isOpen })),
+
     setOpen: (value) => set({ isOpen: value }),
   }));
 

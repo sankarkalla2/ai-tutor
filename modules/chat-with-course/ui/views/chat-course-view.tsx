@@ -1,9 +1,8 @@
 "use client";
 import { useParams } from "next/navigation";
-import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
-import { useChat } from "@ai-sdk/react";
+import { ArrowLeft, MessageSquarePlus } from "lucide-react";
 import {
   Conversation,
   ConversationContent,
@@ -12,14 +11,12 @@ import {
 import { Message, MessageContent } from "@/components/ai-elements/message";
 import {
   PromptInput,
-  PromptInputButton,
   PromptInputSubmit,
   PromptInputTextarea,
   PromptInputToolbar,
   PromptInputTools,
 } from "@/components/ai-elements/prompt-input";
 import { Response } from "@/components/ai-elements/response";
-import { ArrowLeft, GlobeIcon, History, MessageSquarePlus } from "lucide-react";
 import {
   Source,
   Sources,
@@ -36,40 +33,19 @@ import { Suggestion, Suggestions } from "@/components/ai-elements/suggestion";
 
 import { PickCoursesCommand } from "@/modules/chat-with-course/ui/components/pick-courses-command";
 import { MobileSidebarToggleButton } from "@/components/mobile-sidebar-toggle-button";
-
-const suggestions = [
-  "What are prereqsites to take this course?",
-  "Test me with some questions from this course",
-  "Can you make flashcards for the key concepts?",
-  "how much time does it take to complete this course?",
-];
+import { useChatWithCourse } from "../../hooks/use-chat-with-course";
 
 const ChatWithCourseView = () => {
-  const params = useParams<{ id: string }>();
-  const [input, setInput] = useState("");
-  const [webSearch, setWebSearch] = useState(false);
-  const { messages, sendMessage, status, setMessages } = useChat();
-
-  const handleSubmit = () => {
-    if (input.trim()) {
-      sendMessage(
-        { text: input },
-
-        {
-          body: {
-            webSearch: webSearch,
-            courseId: params.id,
-          },
-        }
-      );
-      setInput("");
-    }
-  };
-
-  const handleSuggestionClick = (suggestion: string) => {
-    setInput(suggestion);
-  };
-
+  const { id } = useParams<{ id: string }>();
+  const {
+    suggestions,
+    input,
+    messages,
+    status,
+    handleSubmit,
+    handleSuggestionClick,
+    setInput
+  } = useChatWithCourse(id);
   return (
     <div className="max-w-4xl mx-auto p-4 md:px-6 md:pb-10 relative size-full h-screen">
       <div className="flex items-center justify-between">
@@ -83,11 +59,7 @@ const ChatWithCourseView = () => {
           </div>
         </div>
         <div className="flex items-center gap-x-2">
-          <Button size={"sm"} variant={"secondary"}>
-            <History />
-            History
-          </Button>
-          <PickCoursesCommand courseId={params.id} />
+          <PickCoursesCommand courseId={id} />
         </div>
       </div>
       <div className="flex flex-col h-full">
@@ -184,13 +156,7 @@ const ChatWithCourseView = () => {
           />
           <PromptInputToolbar>
             <PromptInputTools>
-              <PromptInputButton
-                variant={webSearch ? "primary" : "ghost"}
-                onClick={() => setWebSearch(!webSearch)}
-              >
-                <GlobeIcon size={16} />
-                <span>Search</span>
-              </PromptInputButton>
+              
             </PromptInputTools>
             <PromptInputSubmit disabled={!input} status={status} />
           </PromptInputToolbar>

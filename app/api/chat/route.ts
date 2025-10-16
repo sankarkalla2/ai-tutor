@@ -36,7 +36,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ message: "course not found" }, { status: 404 });
 
   const result = streamText({
-    model: webSearch ? "perplexity/sonar" : gateway("openai/gpt-5-nano"),
+    model: webSearch ? "perplexity/sonar" : gateway("openai/gpt-4o-mini"),
     messages: convertToModelMessages(messages),
     system: `You are an expert tutor.
             Below is a course with its name, description, lessons, and lesson descriptions.

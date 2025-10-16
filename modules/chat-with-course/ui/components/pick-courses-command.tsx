@@ -1,18 +1,7 @@
 "use client";
 
 import * as React from "react";
-import {
-  ArrowRight,
-  Calculator,
-  Calendar,
-  CreditCard,
-  ExternalLink,
-  Folder,
-  Link2,
-  Settings,
-  Smile,
-  User,
-} from "lucide-react";
+import { ArrowRight } from "lucide-react";
 
 import {
   CommandDialog,
@@ -21,20 +10,18 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-  CommandSeparator,
-  CommandShortcut,
 } from "@/components/ui/command";
-import { Button } from "@/components/ui/button";
 import { useQuery } from "@tanstack/react-query";
 import { getAllUserCourses } from "@/modules/courses/server/courses";
 import Link from "next/link";
+import { Kbd, KbdGroup } from "@/components/ui/kbd";
 
 interface PickCoursesCommandProps {
   courseId: string;
 }
 export function PickCoursesCommand({ courseId }: PickCoursesCommandProps) {
   const [open, setOpen] = React.useState(false);
-  const { data, isLoading, isError } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ["get-all-user-courses"],
     queryFn: () => getAllUserCourses(),
   });
@@ -54,18 +41,13 @@ export function PickCoursesCommand({ courseId }: PickCoursesCommandProps) {
   return (
     <>
       <div
-        className="flex items-center gap-x-2 text-sm  text-muted-foreground py-1 px-3 rounded-lg cursor-pointer w-[250] justify-between dark:bg-muted bg-secondary leading-relaxed"
+        className="flex items-center gap-x-2 text-sm  py-1 px-3 rounded-md cursor-pointer w-[250] justify-between dark:bg-muted bg-accent leading-relaxed"
         onClick={() => setOpen(true)}
       >
         Search Courses...
-        <kbd className="flex items-center gap-x-1">
-          <span className="text-xs bg-background  pointer-events-none inline-flex h-5 items-center gap-1 rounded border px-1.5 font-mono text-[10px] font-medium opacity-100 select-none">
-            ⌘
-          </span>
-          <span className="bg-background  pointer-events-none inline-flex h-5 items-center gap-1 rounded border px-1.5 font-mono text-[10px] font-medium opacity-100 select-none">
-            J
-          </span>
-        </kbd>
+        <KbdGroup>
+          <Kbd className="bg-sidebar-primary-foreground">Ctrl + K</Kbd>
+        </KbdGroup>
       </div>
       <CommandDialog open={open} onOpenChange={setOpen}>
         <CommandInput placeholder="Search course by title..." />
