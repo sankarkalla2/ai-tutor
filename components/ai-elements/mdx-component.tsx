@@ -1,6 +1,5 @@
 "use client";
 import Link from "next/link";
-import { Badge } from "@/components/ui/badge";
 import { CodeBlock, Pre } from "fumadocs-ui/components/codeblock";
 
 export function getMDXComponents() {
