@@ -1,29 +1,13 @@
 "use client";
 
-import { authClient } from "@/lib/auth-client";
 import { useParams, usePathname } from "next/navigation";
-import { useState } from "react";
 import Link from "next/link";
 
-import {
-  BookOpen,
-  ChevronDown,
-  Circle,
-  CircleCheckBig,
-  Folder,
-  LogIn,
-  PanelLeft,
-  PanelRight,
-  Play,
-  Sparkles,
-  StarIcon,
-} from "lucide-react";
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
-
 import {
   Sidebar,
   SidebarContent,
@@ -35,28 +19,40 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarMenuSkeleton,
   SidebarMenuSub,
   SidebarMenuSubButton,
   SidebarMenuSubItem,
   useSidebar,
 } from "@/components/ui/sidebar";
+import { Kbd, KbdGroup } from "@/components/ui/kbd";
 import { Skeleton } from "@/components/ui/skeleton";
+import {
+  BookOpen,
+  ChevronDown,
+  Circle,
+  CircleCheckBig,
+  LogIn,
+  PanelRight,
+  Play,
+  Sparkles,
+} from "lucide-react";
 
 import { useCourseViewId } from "../hooks/use-course-view-id";
 import { NavUser } from "@/components/sidebar/nav-user";
 import { getUserActiveSubscription } from "@/server/user";
 import { useQuery } from "@tanstack/react-query";
-import UpgradeCard from "@/components/upgrade-card";
 import { Button } from "@/components/ui/button";
 import UserFeedback from "@/components/user-feedback";
+import { authClient } from "@/lib/auth-client";
+import { CourseSidebarLoading } from "./course-side-loading";
+
 export function CourseSidebar() {
   const pathname = usePathname();
   const params = useParams<{ id: string }>();
 
   const session = authClient.useSession();
   const { data, isLoading, isError } = useCourseViewId(params.id);
-  const { open, toggleSidebar, setOpen, isMobile } = useSidebar();
+  const { open, toggleSidebar, isMobile } = useSidebar();
   const { data: userSubscription, isLoading: isGetSubscriptionLoading } =
     useQuery({
       queryKey: ["get-user-subscription"],
@@ -64,57 +60,7 @@ export function CourseSidebar() {
     });
 
   if (isLoading) {
-    return (
-      <Sidebar collapsible="icon">
-        <SidebarHeader>
-          <SidebarMenu>
-            <SidebarMenuItem>
-              <SidebarMenuButton size={"lg"} variant={"outline"}>
-                <Link href={"/"}>
-                  <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
-                    <BookOpen className="size-4" />
-                  </div>
-                </Link>
-                <Link href={"/"}>
-                  <div className="grid flex-1 text-left text-sm leading-tight">
-                    <span className="truncate font-medium">{"AI Tutor"}</span>
-                    <span className="truncate text-xs">
-                      {"Heaven for learning"}
-                    </span>
-                  </div>
-                </Link>
-                <PanelRight className="ml-auto" onClick={toggleSidebar} />
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-          </SidebarMenu>
-        </SidebarHeader>
-        <SidebarContent>
-          <SidebarGroup>
-            <SidebarGroupLabel>Course Content</SidebarGroupLabel>
-            <SidebarGroupContent>
-              {[...Array(3)].map((_, i) => (
-                <div key={i} className="mb-4">
-                  <SidebarMenuSkeleton className="h-6 w-full mb-2" />
-                  {[...Array(4)].map((_, j) => (
-                    <SidebarMenuSkeleton
-                      key={j}
-                      className="h-6 w-full ml-4 mb-1"
-                    />
-                  ))}
-                </div>
-              ))}
-            </SidebarGroupContent>
-          </SidebarGroup>
-        </SidebarContent>
-        <SidebarFooter>
-          <SidebarMenu>
-            <SidebarMenuItem>
-              <Skeleton className="h-10 w-full rounded-md bg-muted" />
-            </SidebarMenuItem>
-          </SidebarMenu>
-        </SidebarFooter>
-      </Sidebar>
-    );
+    return <CourseSidebarLoading />;
   }
 
   if (isError) return <div>Error loading course data</div>;
@@ -152,11 +98,6 @@ export function CourseSidebar() {
           <SidebarGroupContent>
             <SidebarMenu className="space-y-2">
               {data?.course?.modules.map((module, moduleIndex) => {
-                const completed = module.lessons.filter(
-                  (l) => l.status === "COMPLETED"
-                ).length;
-                const total = module.lessons.length;
-
                 return (
                   <SidebarMenuItem key={module.id} className="">
                     <Collapsible defaultOpen={moduleIndex === 0} className="">
@@ -250,8 +191,15 @@ export function CourseSidebar() {
           <SidebarMenu>
             <SidebarMenuItem>
               <SidebarMenuButton
-                onClick={() => setOpen(true)}
-                tooltip={"Open sidebar ctrl+b"}
+                onClick={toggleSidebar}
+                tooltip={
+                  <div>
+                    <KbdGroup>
+                      <Kbd>ctrl</Kbd>
+                      <Kbd>b</Kbd>
+                    </KbdGroup>
+                  </div>
+                }
               >
                 <PanelRight />
               </SidebarMenuButton>

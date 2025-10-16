@@ -39,6 +39,7 @@ export const updateUserProfile = async (name?: string, imgUrl?: string) => {
   if (!session?.user) {
     return { status: 401, message: "Access Denied" };
   }
+  console.log("name",name)
 
   try {
     await auth.api.updateUser({

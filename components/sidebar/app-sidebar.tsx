@@ -19,7 +19,6 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarMenuSkeleton,
   SidebarRail,
   useSidebar,
 } from "@/components/ui/sidebar";
@@ -33,6 +32,7 @@ import { getUserActiveSubscription } from "@/server/user";
 import UpgradeCard from "../upgrade-card";
 import UserFeedback from "../user-feedback";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { Kbd, KbdGroup } from "../ui/kbd";
 
 const sidebarItems = [
   {
@@ -69,9 +69,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible="icon" {...props} variant="sidebar">
       <SidebarHeader>
-        <SidebarMenuButton size={"lg"} variant={"outline"}>
-          <Link href={"/"}>
-            <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
+        <SidebarMenuButton size={"lg"} variant={"outline"} isActive>
+          <Link href={"/new"}>
+            <div className=" flex aspect-square size-8 items-center justify-center rounded-lg border-dashed">
               <BookOpen className="size-4" />
             </div>
           </Link>
@@ -133,7 +133,15 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             <SidebarMenuItem>
               <SidebarMenuButton
                 onClick={toggleSidebar}
-                tooltip={"Open sidebar ctrl+b"}
+                tooltip={
+                  <div>
+                    {"Open Sidebar"}{" "}
+                    <KbdGroup>
+                      <Kbd>ctrl</Kbd>
+                      <Kbd>b</Kbd>
+                    </KbdGroup>
+                  </div>
+                }
               >
                 <PanelRight />
               </SidebarMenuButton>

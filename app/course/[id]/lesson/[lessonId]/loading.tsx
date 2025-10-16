@@ -35,7 +35,7 @@ const Loading = () => {
 
         {/* Right Panel: Chat Skeleton */}
         <ResizablePanel
-          defaultSize={18}
+          defaultSize={20}
           minSize={25}
           className="hidden md:flex"
         >

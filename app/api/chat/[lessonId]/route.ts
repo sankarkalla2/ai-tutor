@@ -9,12 +9,13 @@ export const maxDuration = 30;
 
 export async function POST(
   req: Request,
-  { params }: { params: Promise<{ lessonid: string }> }
+  { params }: { params: Promise<{ lessonId: string }> }
 ) {
   const { messages, userId }: { messages: UIMessage[]; userId: string } =
     await req.json();
   const userSubscription = await getUserActiveSubscription();
-  console.log('called')
+  console.log((await params).lessonId)
+
   // if (!userSubscription) {
   //   return NextResponse.json(
   //     { message: "Upgrade to get unlimited access" },
@@ -24,7 +25,7 @@ export async function POST(
 
   const lesson = await db.lesson.findUnique({
     where: {
-      id: (await params).lessonid,
+      id: (await params).lessonId,
     },
     include: {
       module: {

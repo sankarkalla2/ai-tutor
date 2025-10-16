@@ -4,10 +4,8 @@ import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
-  CardHeader,
   CardTitle,
   CardDescription,
-  CardFooter,
 } from "@/components/ui/card";
 import {
   Field,
@@ -17,14 +15,11 @@ import {
   FieldSeparator,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import Link from "next/link";
-import { cn } from "@/lib/utils";
-
-import useSignIn from "../hooks/use-sign-in";
 import { Key, Loader2, MoveLeft } from "lucide-react";
-import { Separator } from "@/components/ui/separator";
-import { useSearchParams } from "next/navigation";
+
+import { cn } from "@/lib/utils";
+import useSignIn from "../hooks/use-sign-in";
 
 export const SignInView = () => {
   const {
@@ -35,9 +30,6 @@ export const SignInView = () => {
     setEmail,
     loading,
   } = useSignIn();
-
-
-
 
   return (
     <div className="max-h-screen w-full pt-32">

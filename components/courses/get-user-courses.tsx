@@ -56,7 +56,6 @@ const GetUserCourses = () => {
             <Card
               className="border hover:shadow-md transition-shadow duration-200 cursor-pointer"
               key={course.id}
-              variant={"accent"}
             >
               <CardContent className="">
                 <CardHeader className="p-0 mb-4">
@@ -88,19 +87,7 @@ const GetUserCourses = () => {
                   </Badge>
                 </div>
 
-                {/* <div className="flex items-center justify-between mb-4">
-                  <Badge variant="outline" className="text-xs">
-                    {progress}% complete
-                  </Badge>
-                  <div className="w-20 bg-gray-100 rounded-full h-1">
-                    <div 
-                      className="bg-blue-600 h-1 rounded-full"
-                      style={{ width: `${progress}%` }}
-                    />
-                  </div>
-                </div> */}
-
-                <div className="flex gap-2">
+                <div className="flex gap-2 items-center">
                   <Button asChild size="sm" className="flex-1" variant={"mono"}>
                     <Link href={`/course/${course.id}`}>
                       <ExternalLink className="w-4 h-4 mr-2" />
@@ -108,8 +95,10 @@ const GetUserCourses = () => {
                     </Link>
                   </Button>
 
-                  <Button size="sm" variant="outline">
-                    <MessageCircle className="w-4 h-4" />
+                  <Button size="icon" variant="outline">
+                    <Link href={`/chat/courses/${course.id}`}>
+                      <MessageCircle className="w-4 h-4" />
+                    </Link>
                   </Button>
                 </div>
               </CardContent>
@@ -121,5 +110,3 @@ const GetUserCourses = () => {
 };
 
 export default GetUserCourses;
-
-

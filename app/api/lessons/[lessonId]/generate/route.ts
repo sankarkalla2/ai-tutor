@@ -61,7 +61,7 @@ export async function GET(
   let previewQuestions: any[] = [];
 
   const { partialObjectStream } = await streamObject({
-    model: openai("gpt-4.1-nano"),
+    model: openai("gpt-4.1"),
     schema: LessonOutputSchema,
     prompt: createLessonGenerationPrompt(
       lesson.module.course.title,

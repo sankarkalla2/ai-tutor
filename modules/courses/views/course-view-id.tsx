@@ -29,7 +29,11 @@ const CourseViewIdPage = () => {
   }
 
   if (isError) {
-    return <ErrorPage errorMessage="Error fetching course. Please try again" />;
+    return (
+      <div className="min-h-[80vh] flex items-center justify-center">
+        <ErrorPage errorMessage="Error fetching course. Please try again" />;
+      </div>
+    );
   }
 
   if (!data?.course) {
@@ -45,31 +49,33 @@ const CourseViewIdPage = () => {
         <MobileSidebarToggleButton />
         <div className="space-x-2">
           <div className="flex items-center justify-between">
-            <h1 className="text-3xl font-bold truncate">
+            <h1 className="text-xl lg:text-2xl font-medium truncate">
               {data?.course?.title}
             </h1>
           </div>
 
           <div className="flex items-center text-sm text-muted-foreground justify-between">
             <div className="flex items-center gap-x-4">
-              <Badge size={"sm"} variant={"info"} appearance={"outline"}>
+              <Badge size={"xs"} variant={"info"} appearance={"outline"}>
                 {data?.course?.modules.length} modules
               </Badge>
-              <Badge size={"sm"} variant={"primary"} appearance={"outline"}>
-                {totalLessons} lessons
-              </Badge>
-              <Badge size={"sm"} variant={"success"} appearance={"outline"}>
-                {completedLessons} completed
+              <Badge size={"xs"} variant={"success"} appearance={"outline"}>
+                {completedLessons} / {totalLessons} Completed
               </Badge>
             </div>
-            <Badge variant="secondary" className="truncate" size="sm">
+            <Badge
+              variant={progressPercentage >= 50 ? "success" : "warning"}
+              className="truncate"
+              size="sm"
+              appearance={"outline"}
+            >
               {progressPercentage}% completed
             </Badge>
           </div>
         </div>
 
         {/* All Modules and Lessons */}
-        <Card className="">
+        <Card className="bg-sidebar">
           {data?.course?.modules.map((module, moduleIndex) => {
             const moduleCompleted = module.lessons?.filter(
               (l) => l.status === "COMPLETED"
@@ -82,7 +88,7 @@ const CourseViewIdPage = () => {
             return (
               <CardContent key={module.id} className="">
                 <div className="flex items-center justify-between">
-                  <h2 className="text-xl  font-semibold pb-2">
+                  <h2 className="md:text-lg  font-semibold pb-2">
                     Module {moduleIndex + 1}: {module.title}
                   </h2>
                   <div className="flex items-center gap-3">
@@ -90,10 +96,15 @@ const CourseViewIdPage = () => {
                       variant={"info"}
                       className="hidden md:flex"
                       appearance={"outline"}
+                      size={"sm"}
                     >
                       {moduleCompleted} / {moduleTotal} completed
                     </Badge>
-                    <Badge variant="secondary" className="text-sm">
+                    <Badge
+                      variant={moduleProgress >= 50 ? "success" : "warning"}
+                      appearance={"outline"}
+                      size={"sm"}
+                    >
                       {moduleProgress}%
                     </Badge>
                   </div>
@@ -103,7 +114,7 @@ const CourseViewIdPage = () => {
                   {module.lessons.map((lesson, lessonIndex) => (
                     <div key={lesson.id} className="">
                       <Link
-                        className="flex items-center py-2 px-2 gap-x-2 rounded-md hover:bg-accent transition-colors cursor-pointer"
+                        className="flex items-center py-2 px-2 gap-x-2 rounded-md hover:bg-sidebar-accent transition-colors cursor-pointer"
                         href={`/course/${params.id}/lesson/${lesson.id}`}
                       >
                         {lesson.status === "COMPLETED" ? (
@@ -120,7 +131,7 @@ const CourseViewIdPage = () => {
                         </div>
 
                         <div className="ml-auto flex items-center gap-2">
-                          <Badge variant={"primary"}>
+                          <Badge variant={"primary"} appearance={"outline"}>
                             <MoveRight /> Start
                           </Badge>
                         </div>

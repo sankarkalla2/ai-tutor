@@ -1,6 +1,5 @@
 "use server";
 import { generateObject } from "ai";
-import { google } from "@ai-sdk/google";
 import { openai } from "@ai-sdk/openai";
 import { z } from "zod";
 import { db } from "@/lib/db";
@@ -38,7 +37,6 @@ export const createQuestionsByTopic = async (
       `,
     });
 
-
     return object.questions;
   } catch (error) {
     console.error("Error generating questions:", error);
@@ -71,7 +69,7 @@ export const createCourseOverview = async (
   }
 
   const { object } = await generateObject({
-    model: gateway('openai/gpt-5'),
+    model: gateway("openai/gpt-5"),
     providerOptions: {
       google: {
         structuredOutputs: true,
@@ -122,7 +120,6 @@ export const createCourseOverview = async (
     Make sure the course structure is logical and progressive, building from basic concepts to advanced topics.
     Focus on practical, actionable content that students can apply.`,
   });
-
 
   try {
     const course = await db.course.create({

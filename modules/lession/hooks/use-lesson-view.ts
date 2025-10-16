@@ -1,13 +1,14 @@
 import { useEffect, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-
 import { toast } from "sonner";
+
 import {
   getLessionById,
   toggleLessionStatus,
 } from "@/modules/lession/server/lesson";
 import { useRouter } from "next/navigation";
 import { getCoursePreiview } from "@/modules/courses/server/courses";
+import { useToggleLessonChat } from "../providers/store-provier";
 
 export const useLessonView = (lessonId: string, courseId: string) => {
   const [open, setOpen] = useState(false);
@@ -15,43 +16,18 @@ export const useLessonView = (lessonId: string, courseId: string) => {
   const [isStreaming, setIsStreaming] = useState(false);
   const queryClient = useQueryClient();
   const router = useRouter();
+  const [regeneratePrompt, setRegeneratePrompt] = useState("");
+  const { isOpen, toggleOpen } = useToggleLessonChat((state) => state);
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ["get-lesson-by-id", lessonId],
     queryFn: async () => await getLessionById(lessonId, courseId),
   });
 
-  const { data: courseIndex, isLoading: isLoadingCourse } = useQuery({
+  const { data: courseIndex } = useQuery({
     queryKey: ["get-course-preview", courseId],
     queryFn: () => getCoursePreiview(courseId),
   });
-
-  let prevLessonId = undefined;
-  let nextLessonId = undefined;
-  let currentLessonId = lessonId;
-
-  if (courseIndex?.course) {
-    const allLessons = courseIndex.course.modules.flatMap(
-      (module) => module.lessons
-    );
-    const currentIndex = allLessons.findIndex(
-      (lesson) => lesson.id === currentLessonId
-    );
-
-    if (currentIndex > 0) {
-      prevLessonId = allLessons[currentIndex - 1].id;
-    }
-    if (currentIndex >= 0 && currentIndex < allLessons.length - 1) {
-      nextLessonId = allLessons[currentIndex + 1].id;
-    }
-  }
-
-  // Auto-generate lesson if not yet generated
-  useEffect(() => {
-    if (data?.lesson?.status === "NOT_GENERATED") {
-      generateLesson();
-    }
-  }, [data?.lesson?.status]);
 
   const { mutate: toggleLession, isPending } = useMutation({
     mutationFn: () => toggleLessionStatus(lessonId),
@@ -63,16 +39,6 @@ export const useLessonView = (lessonId: string, courseId: string) => {
       await queryClient.cancelQueries({
         queryKey: ["get-lesson-by-id", lessonId],
       });
-
-      // Get previous data for rollback
-      const prevLessonData = queryClient.getQueryData([
-        "get-lesson-by-id",
-        lessonId,
-      ]);
-      const prevCoursePreview = queryClient.getQueryData([
-        "get-course-preview",
-        courseId,
-      ]);
 
       queryClient.setQueriesData(
         { queryKey: ["get-course-preview", courseId] },
@@ -128,6 +94,51 @@ export const useLessonView = (lessonId: string, courseId: string) => {
       }
     },
   });
+
+  useEffect(() => {
+    const handleShortcut = (e: KeyboardEvent) => {
+      const target = e.target as HTMLElement;
+      const isInput =
+        ["INPUT", "TEXTAREA"].includes(target.tagName) ||
+        target.isContentEditable;
+      if (isInput) return; // ignore shortcuts while typing
+
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") {
+        e.preventDefault();
+        if (!isLoading) toggleOpen();
+      }
+    };
+
+    window.addEventListener("keydown", handleShortcut);
+    return () => window.removeEventListener("keydown", handleShortcut);
+  }, [toggleOpen, isLoading]);
+
+  let prevLessonId = undefined;
+  let nextLessonId = undefined;
+  let currentLessonId = lessonId;
+
+  if (courseIndex?.course) {
+    const allLessons = courseIndex.course.modules.flatMap(
+      (module) => module.lessons
+    );
+    const currentIndex = allLessons.findIndex(
+      (lesson) => lesson.id === currentLessonId
+    );
+
+    if (currentIndex > 0) {
+      prevLessonId = allLessons[currentIndex - 1].id;
+    }
+    if (currentIndex >= 0 && currentIndex < allLessons.length - 1) {
+      nextLessonId = allLessons[currentIndex + 1].id;
+    }
+  }
+
+  // Auto-generate lesson if not yet generated
+  useEffect(() => {
+    if (data?.lesson?.status === "NOT_GENERATED") {
+      generateLesson();
+    }
+  }, [data?.lesson?.status]);
 
   const generateLesson = async (
     regeneratePrompt?: string,
@@ -204,5 +215,9 @@ export const useLessonView = (lessonId: string, courseId: string) => {
     courseIndex,
     prevLessonId,
     nextLessonId,
+    isOpen,
+    toggleOpen,
+    regeneratePrompt,
+    setRegeneratePrompt,
   };
 };

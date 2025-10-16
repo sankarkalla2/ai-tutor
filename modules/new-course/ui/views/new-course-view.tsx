@@ -1,11 +1,11 @@
 "use client";
 
 import type React from "react";
+
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Label } from "@/components/ui/label";
 import { Sparkles } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
@@ -14,22 +14,17 @@ import { useCreateCourse } from "../../hooks/use-create-course";
 import AiQuestionsChat from "../components/ai-questions-chat";
 import Loader from "@/components/loader";
 import GetUserCourses from "@/components/courses/get-user-courses";
-import { useSidebar } from "@/components/ui/sidebar";
 
 export const NewCoursePageView = () => {
   const {
     topic,
     setTopic,
     selectedFormat,
-    setSelectedFormat,
     enableQuestions,
     setEnableQuestions,
     handleCreateCourse,
-    formats,
     questions,
     disableCheckbox,
-    setDisableCheckbox,
-    setQuestions,
     isLoading,
     generateQuestionsByTopic,
     messages,
@@ -41,7 +36,6 @@ export const NewCoursePageView = () => {
     isComplete,
     setIsComplete,
     isPending,
-    isGetSubscriptionLoading,
     userSubscription,
   } = useCreateCourse();
 
@@ -50,18 +44,6 @@ export const NewCoursePageView = () => {
       {isPending && <Loader />}
       <div className="max-w-2xl mx-auto pt-8">
         <div className="text-center mb-8">
-          {/* <div className="flex items-center justify-center mb-4">
-            <Badge variant="secondary" className="text-xs">
-              2 of 2 courses
-            </Badge>
-            <Button
-              variant={"dim"}
-              size="sm"
-              className="ml-4 bg-orange-500 text-white border-orange-500 hover:bg-orange-600"
-            >
-              Need more? Upgrade
-            </Button>
-          </div> */}
           <h1 className="text-4xl font-bold mb-2">
             What can I help you learn?
           </h1>
@@ -70,15 +52,15 @@ export const NewCoursePageView = () => {
           </p>
         </div>
 
-        <Card className="mb-6">
+        <Card className="mb-6 bg-accent">
           <CardContent className="p-6">
-            <div className="space-y-6">
+            <div className="space-y-5">
               <div>
                 <label className="block text-sm font-medium  mb-2">
                   What can I help you learn?
                 </label>
                 <Textarea
-                  variant={"md"}
+                  variant={"lg"}
                   value={topic}
                   onChange={(e) => setTopic(e.target.value)}
                   placeholder="Enter a topic"

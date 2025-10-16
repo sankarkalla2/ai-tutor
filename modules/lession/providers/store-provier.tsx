@@ -24,6 +24,8 @@ export const ToggleLessonChatProvider = ({
     storeRef.current = createToggleLessonChatStore(!isMobile); // ✅ Set initial value conditionally
   }
 
+  
+
   return (
     <ToggleLessonChatContext.Provider value={storeRef.current}>
       {children}

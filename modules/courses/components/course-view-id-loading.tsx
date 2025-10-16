@@ -1,12 +1,16 @@
-"use client";
-
-import { MobileSidebarToggleButton } from "@/components/mobile-sidebar-toggle-button";
+import { useEffect, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 
+import { MobileSidebarToggleButton } from "@/components/mobile-sidebar-toggle-button";
 export const CourseViewIdLoading = () => {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+
+  if (!mounted) return null;
+
   return (
-    <div className="sm:w-full md:w-3xl lg:w-4xl mx-auto px-4 space-y-6">
+    <div className="w-full md:w-3xl lg:w-4xl mx-auto px-4 space-y-6 pt-5">
       <MobileSidebarToggleButton />
       <div className="space-y-6">
         <div className="space-x-2">

@@ -1,5 +1,9 @@
 "use client";
+import { useParams } from "next/navigation";
+import { useState } from "react";
 
+import { Button } from "@/components/ui/button";
+import { useChat } from "@ai-sdk/react";
 import {
   Conversation,
   ConversationContent,
@@ -14,17 +18,8 @@ import {
   PromptInputToolbar,
   PromptInputTools,
 } from "@/components/ai-elements/prompt-input";
-import { useEffect, useState } from "react";
-import { useChat } from "@ai-sdk/react";
 import { Response } from "@/components/ai-elements/response";
-import {
-  ArrowLeft,
-  GlobeIcon,
-  History,
-  Home,
-  MessageSquarePlus,
-  Plus,
-} from "lucide-react";
+import { ArrowLeft, GlobeIcon, History, MessageSquarePlus } from "lucide-react";
 import {
   Source,
   Sources,
@@ -38,21 +33,10 @@ import {
 } from "@/components/ai-elements/reasoning";
 import { Loader } from "@/components/ai-elements/loader";
 import { Suggestion, Suggestions } from "@/components/ai-elements/suggestion";
-import { useParams } from "next/navigation";
-import { Button } from "@/components/ui/button";
+
 import { PickCoursesCommand } from "@/modules/chat-with-course/ui/components/pick-courses-command";
 import { MobileSidebarToggleButton } from "@/components/mobile-sidebar-toggle-button";
 
-const models = [
-  {
-    name: "GPT 4o",
-    value: "openai/gpt-4o",
-  },
-  {
-    name: "Deepseek R1",
-    value: "deepseek/deepseek-r1",
-  },
-];
 const suggestions = [
   "What are prereqsites to take this course?",
   "Test me with some questions from this course",
@@ -63,19 +47,16 @@ const suggestions = [
 const ChatWithCourseView = () => {
   const params = useParams<{ id: string }>();
   const [input, setInput] = useState("");
-  const [model, setModel] = useState<string>(models[0].value);
   const [webSearch, setWebSearch] = useState(false);
   const { messages, sendMessage, status, setMessages } = useChat();
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = () => {
     if (input.trim()) {
       sendMessage(
         { text: input },
 
         {
           body: {
-            model: model,
             webSearch: webSearch,
             courseId: params.id,
           },
@@ -192,10 +173,14 @@ const ChatWithCourseView = () => {
           </Suggestions>
         )}
 
-        <PromptInput onSubmit={handleSubmit} className="mt-4">
+        <PromptInput
+          onSubmit={handleSubmit}
+          className="mt-4 bg-muted rounded-xl"
+        >
           <PromptInputTextarea
             onChange={(e) => setInput(e.target.value)}
             value={input}
+            className="rounded-md"
           />
           <PromptInputToolbar>
             <PromptInputTools>

@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -12,56 +11,37 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { CheckCircle, XCircle, RotateCcw, Eye } from "lucide-react";
-import { experimental_useObject } from "@ai-sdk/react";
-import z from "zod";
 
-interface Question {
-  id: string;
-  question: string;
-  options: string[];
-  answer: string;
-}
-
-interface UserAnswer {
-  questionId: string;
-  selectedOption: number | null;
-}
-
-type QuizMode = "taking" | "results" | "review";
+import { useLessonQuiz } from "../../hooks/use-lesson-quiz";
 
 interface QuizPageProps {
   lessonId: string;
 }
 
 export default function QuizPage({ lessonId }: QuizPageProps) {
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const { object, submit, isLoading } = experimental_useObject({
-    api: `/api/lessons/${lessonId}/quiz`,
-    schema: z.object({
-      quiz: z.array(
-        z.object({
-          question: z.string(),
-          options: z.array(z.string()).min(2).max(5),
-          answer: z.string(),
-          id: z.string(),
-        })
-      ),
-    }),
-  });
+  const {
+    currentQuestionIndex,
+    userAnswers,
+    selectedOption,
+    mode,
+    object,
+    submit,
+    isLoading,
+    questions,
+    currentQuestion,
+    isLastQuestion,
+    handleNext,
+    handleOptionSelect,
+    handlePrevious,
+    handleReviewNavigation,
+    handleSkip,
+    calculateScore,
+    retakeQuiz,
+    reviewQuiz,
+    backToResults,
+  } = useLessonQuiz(lessonId);
 
-  const [userAnswers, setUserAnswers] = useState<UserAnswer[]>([]);
-  const [selectedOption, setSelectedOption] = useState<number | null>(null);
-  const [mode, setMode] = useState<QuizMode>("taking");
-
-  if (isLoading) {
-    return (
-      <div className="text-center text-sm text-muted-foreground">
-        Loading quiz...
-      </div>
-    );
-  }
-
-  if (!object?.quiz) {
+  if (!object?.quiz?.length) {
     return (
       <Button
         onClick={() => submit({})}
@@ -73,117 +53,13 @@ export default function QuizPage({ lessonId }: QuizPageProps) {
       </Button>
     );
   }
-
-  const questions = object.quiz;
-  const currentQuestion = questions[currentQuestionIndex];
-  const isLastQuestion = currentQuestionIndex === questions.length - 1;
-
-  const handleOptionSelect = (optionIndex: number) => {
-    setSelectedOption(optionIndex);
-  };
-
-  const handleNext = () => {
-    const existingAnswerIndex = userAnswers.findIndex(
-      (answer) => answer.questionId === currentQuestion?.id
-    );
-
-    const newAnswer: UserAnswer = {
-      questionId: currentQuestion?.id || "",
-      selectedOption,
-    };
-
-    if (existingAnswerIndex >= 0) {
-      const updatedAnswers = [...userAnswers];
-      updatedAnswers[existingAnswerIndex] = newAnswer;
-      setUserAnswers(updatedAnswers);
-    } else {
-      setUserAnswers([...userAnswers, newAnswer]);
-    }
-
-    if (isLastQuestion) {
-      setMode("results");
-    } else {
-      setCurrentQuestionIndex(currentQuestionIndex + 1);
-      setSelectedOption(null);
-    }
-  };
-
-  const handleSkip = () => {
-    if (isLastQuestion) {
-      setMode("results");
-    } else {
-      setCurrentQuestionIndex(currentQuestionIndex + 1);
-      setSelectedOption(null);
-    }
-  };
-
-  const handlePrevious = () => {
-    if (currentQuestionIndex > 0) {
-      setCurrentQuestionIndex(currentQuestionIndex - 1);
-      const previousAnswer = userAnswers.find(
-        (answer) =>
-          answer.questionId === questions[currentQuestionIndex - 1]?.id
-      );
-      setSelectedOption(previousAnswer?.selectedOption || null);
-    }
-  };
-
-  const calculateScore = () => {
-    let correct = 0;
-    userAnswers.forEach((answer) => {
-      const question = questions.find((q) => q?.id === answer.questionId);
-      if (
-        question &&
-        Array.isArray(question.options) &&
-        answer.selectedOption !== null &&
-        question.options[answer.selectedOption] === question.answer
-      ) {
-        correct++;
-      }
-    });
-    return correct;
-  };
-
-  const retakeQuiz = () => {
-    setCurrentQuestionIndex(0);
-    setUserAnswers([]);
-    setSelectedOption(null);
-    setMode("taking");
-  };
-
-  const reviewQuiz = () => {
-    setCurrentQuestionIndex(0);
-    setMode("review");
-    const firstAnswer = userAnswers.find(
-      (answer) => answer.questionId === questions[0]?.id
-    );
-    setSelectedOption(firstAnswer?.selectedOption || null);
-  };
-
-  const handleReviewNavigation = (direction: "next" | "prev") => {
-    const newIndex =
-      direction === "next"
-        ? Math.min(currentQuestionIndex + 1, questions.length - 1)
-        : Math.max(currentQuestionIndex - 1, 0);
-
-    setCurrentQuestionIndex(newIndex);
-    const answer = userAnswers.find(
-      (answer) => answer.questionId === questions[newIndex]?.id
-    );
-    setSelectedOption(answer?.selectedOption || null);
-  };
-
-  const backToResults = () => {
-    setMode("results");
-  };
-
   if (mode === "results") {
     const score = calculateScore();
     const percentage = Math.round((score / questions.length) * 100);
 
     return (
       <div className="flex  p-4">
-        <Card className="max-w-xl w-full" variant="accent">
+        <Card className="max-w-xl w-full">
           <CardHeader className="text-center">
             <CardTitle className="text-xl font-semibold">
               Quiz Complete!
@@ -248,7 +124,7 @@ export default function QuizPage({ lessonId }: QuizPageProps) {
 
     return (
       <div className="flex ">
-        <Card className="max-w-2xl w-full" variant="accent">
+        <Card className="max-w-2xl w-full">
           <CardHeader>
             <div className="flex justify-between items-center gap-x-2">
               <CardTitle className="text-base">
@@ -347,7 +223,7 @@ export default function QuizPage({ lessonId }: QuizPageProps) {
 
   return (
     <div className="flex">
-      <Card className="max-w-2xl w-full" variant="accent">
+      <Card className="max-w-2xl w-full">
         <CardHeader>
           <CardTitle className="text-base">
             Question {currentQuestionIndex + 1} of {questions.length}

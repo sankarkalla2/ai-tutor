@@ -4,14 +4,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 export const LessonContentSkeleton = () => {
   return (
-    <div className="h-full overflow-y-auto scrollbar-hide p-4 md:px-8 lg:px-20 mx-auto space-y-6 max-w-5xl">
-      {/* Top Controls Skeleton */}
-      <div className="flex justify-end items-center gap-2 lg:w-3xl">
-        <Skeleton className="h-8 w-8 rounded" /> {/* Toggle Chat Button */}
-        <Skeleton className="h-8 w-8 rounded" /> {/* Edit Dropdown */}
-        <Skeleton className="h-6 w-32 rounded" /> {/* Mark Done Badge */}
-      </div>
-
+    <div className="h-full overflow-y-auto scrollbar-hide p-4 md:px-8  mx-auto space-y-6 !w-full">
       {/* Lesson Content Skeleton */}
       <div className="space-y-4">
         <Skeleton className="h-6 w-3/4" /> {/* Heading */}
@@ -24,7 +17,7 @@ export const LessonContentSkeleton = () => {
       </div>
 
       {/* Quiz Section Skeleton */}
-      <div className="space-y-4" >
+      <div className="space-y-4">
         <Skeleton className="h-6 w-40" /> {/* Quiz title */}
         {Array(3)
           .fill(0)

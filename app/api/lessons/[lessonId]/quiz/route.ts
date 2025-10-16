@@ -41,7 +41,7 @@ export async function POST(
     }
 
     const result = streamObject({
-      model: google("gemini-1.5-flash"),
+      model: google("gemini-2.5-flash"),
       prompt: `
             You are given a lesson or educational content. Your task is to create a multiple-choice quiz based on that lesson.
             Each quiz question should include:

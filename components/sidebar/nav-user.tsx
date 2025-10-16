@@ -1,23 +1,10 @@
 "use client";
 
-import {
-  BadgeCheck,
-  Bell,
-  ChevronsUpDown,
-  CreditCard,
-  LogOut,
-  Monitor,
-  Moon,
-  Palette,
-  Settings,
-  Sparkles,
-  Sun,
-  TriangleAlert,
-  User,
-  User2Icon,
-  Zap,
-} from "lucide-react";
+import { useTheme } from "next-themes";
+import Link from "next/link";
+import { useState } from "react";
 
+import { useQuery } from "@tanstack/react-query";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
@@ -26,34 +13,41 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
+  DropdownMenuSub,
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
-  SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { DropdownMenuSub } from "@radix-ui/react-dropdown-menu";
-import { useTheme } from "next-themes";
-import { authClient } from "@/lib/auth-client";
-import { ModalProvider } from "../modal-provider";
-import { useState } from "react";
-import { QueryClient, useMutation, useQuery } from "@tanstack/react-query";
-import { getUserActiveSubscription, updateUserProfile } from "@/server/user";
-import Spinner from "../spinner";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
-import Link from "next/link";
 import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
-import { Separator } from "../ui/separator";
-import { username } from "better-auth/plugins";
 import { DialogClose, DialogFooter } from "../ui/dialog";
 import { toast } from "sonner";
+import {
+  Bell,
+  ChevronsUpDown,
+  CreditCard,
+  LogOut,
+  Monitor,
+  Moon,
+  Palette,
+  Settings,
+  Sun,
+  User,
+  Zap,
+} from "lucide-react";
+
+import Spinner from "../spinner";
+import { getUserActiveSubscription } from "@/server/user";
+import { ModalProvider } from "../modal-provider";
+import { authClient } from "@/lib/auth-client";
 
 interface NavUserProps {
   name: string;
@@ -62,43 +56,31 @@ interface NavUserProps {
 }
 export function NavUser({ name, email, avatar }: NavUserProps) {
   const { isMobile } = useSidebar();
-  const { theme, setTheme } = useTheme();
+  const { setTheme } = useTheme();
+  const [userName, setUserName] = useState(name);
+  const [imgUrl] = useState("");
   const [open, setOpen] = useState(false);
+  const [isPending, setIsPending] = useState(false);
+
   const { data: userSubscription, isLoading } = useQuery({
     queryKey: ["get-user-subscription"],
     queryFn: () => getUserActiveSubscription(),
   });
-  const [userName, setUserName] = useState(name);
-  const [imgUrl, setImgUrl] = useState("");
-  const queryClient = new QueryClient();
-  const { mutate, isPending } = useMutation({
-    mutationFn: ({
-      userName: name,
-      imgUrl,
-    }: {
-      userName: string;
-      imgUrl: string;
-    }) => updateUserProfile(name, imgUrl),
-    onSuccess: (data) => {
-      if (data.status === 200) {
-        toast.success(data.message);
-      } else toast.error(data.message);
-      setOpen(false);
-    },
-  });
 
   const handleProfileUdate = async () => {
-    if (!username && !imgUrl.length) return;
+    if (!userName && !imgUrl.length) return;
+    setIsPending(true);
     const res = await authClient.updateUser({
-      ...(name && { name: userName }),
-      ...(imgUrl && { image: imgUrl }),
+      name: userName,
     });
     if (res.data?.status) {
       toast.success("Profile Updated");
     } else {
+      console.log("something went wront");
       toast.error(res.error?.message);
     }
 
+    setIsPending(false);
     setOpen(false);
   };
 
@@ -107,6 +89,7 @@ export function NavUser({ name, email, avatar }: NavUserProps) {
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <SidebarMenuButton
+            isActive
             size="lg"
             className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
           >

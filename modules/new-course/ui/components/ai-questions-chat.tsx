@@ -17,8 +17,6 @@ const AiQuestionsChat = ({
   isComplete,
   setIsComplete,
 }: AiQuestionChatProps) => {
-  // Initialize with first question when questions are available
-
   const { handleInputChange, handleSubmit, handleSubmitOption } =
     useQuestionsCht({
       questions,
@@ -39,7 +37,6 @@ const AiQuestionsChat = ({
         <div className="rounded-lg shadow-sm border bg-sidebar">
           <form onSubmit={handleSubmit}>
             <div className="h-96 overflow-y-auto p-4 space-y-4 text-sm">
-              {/* Show loading state when questions are not ready */}
               {isLoading && (
                 <div className="flex justify-start">
                   <div className="bg-yellow-100 text-gray-800 px-4 py-2 rounded-lg">
@@ -51,7 +48,6 @@ const AiQuestionsChat = ({
                 </div>
               )}
 
-              {/* Render messages */}
               {messages.map((message) => (
                 <div
                   key={message.id}
