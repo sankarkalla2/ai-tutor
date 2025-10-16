@@ -59,7 +59,7 @@ export function NavUser({ name, email, avatar }: NavUserProps) {
   const { setTheme } = useTheme();
   const [userName, setUserName] = useState(name);
   const [imgUrl] = useState("");
-  const [open, setOpen] = useState(false);
+  const [_, setOpen] = useState(false);
   const [isPending, setIsPending] = useState(false);
 
   const { data: userSubscription, isLoading } = useQuery({

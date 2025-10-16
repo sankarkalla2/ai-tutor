@@ -3,13 +3,7 @@ import { prismaAdapter } from "better-auth/adapters/prisma";
 import { magicLink } from "better-auth/plugins";
 import { passkey } from "better-auth/plugins/passkey";
 import { db } from "./db";
-import {
-  polar,
-  checkout,
-  portal,
-  usage,
-  webhooks,
-} from "@polar-sh/better-auth";
+import { polar, checkout, portal } from "@polar-sh/better-auth";
 import { polarClient } from "./polar";
 import { Resend } from "resend";
 import { toast } from "sonner";
@@ -35,7 +29,7 @@ export const auth = betterAuth({
       async sendMagicLink(data) {
         // Send an email to the user with a magic link
         console.log(data);
-        const { data: mailData, error } = await resend.emails.send({
+        const { error } = await resend.emails.send({
           from: "Acme <onboarding@resend.dev>",
           to: ["gowrisankarkalla4@gmail.com"],
           subject: "Hello World",

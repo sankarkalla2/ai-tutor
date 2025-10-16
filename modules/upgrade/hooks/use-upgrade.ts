@@ -29,7 +29,7 @@ export const usePricingPlan = (
 
       const customerSessionToken = sessionResult.token;
 
-      const res = await polarClient.customerPortal.subscriptions.update(
+      await polarClient.customerPortal.subscriptions.update(
         {
           customerSession: customerSessionToken,
         },

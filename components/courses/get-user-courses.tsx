@@ -16,7 +16,7 @@ import Link from "next/link";
 import { Skeleton } from "../ui/skeleton";
 
 const GetUserCourses = () => {
-  const { data, isLoading, isError } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ["get-all-user-courses"],
     queryFn: () => getAllUserCourses(),
   });

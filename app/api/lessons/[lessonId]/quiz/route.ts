@@ -1,8 +1,8 @@
-import { getUserActiveSubscription } from "@/server/user";
+// import { getUserActiveSubscription } from "@/server/user";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { google } from "@ai-sdk/google";
-import { generateObject, streamObject } from "ai";
+import {  streamObject } from "ai";
 import { headers } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 import z from "zod";
@@ -11,7 +11,7 @@ export async function POST(
   req: NextRequest,
   { params }: { params: Promise<{ lessonId: string }> }
 ) {
-  const context = await req.json();
+  // const context = await req.json();
 
   const session = await auth.api.getSession({
     headers: await headers(),

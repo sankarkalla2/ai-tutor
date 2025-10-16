@@ -4,8 +4,7 @@ import { getUserActiveSubscription } from "@/server/user";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { google } from "@ai-sdk/google";
-import { openai } from "@ai-sdk/openai";
-import { generateObject, generateText } from "ai";
+import { generateObject } from "ai";
 import { headers } from "next/headers";
 import z from "zod";
 

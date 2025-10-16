@@ -7,7 +7,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Benefit } from "@polar-sh/sdk/models/components/benefit.js";
 import { Product } from "@polar-sh/sdk/models/components/product.js";
 
 interface PricingCardProps {
@@ -17,7 +16,7 @@ interface PricingCardProps {
 }
 const PricingCard = ({ plan, checkout, checkoutLabel }: PricingCardProps) => {
   return (
-    <Card className="" variant={"accent"}>
+    <Card>
       <CardHeader>
         <CardTitle className="text-lg">{plan.name}</CardTitle>
         <CardDescription>{plan.description}</CardDescription>

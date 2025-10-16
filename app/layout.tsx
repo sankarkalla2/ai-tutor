@@ -1,36 +1,13 @@
 import type { Metadata } from "next";
-import {
-  Geist,
-  Geist_Mono,
-  Inter,
-  DM_Sans,
-  IBM_Plex_Sans,
-} from "next/font/google";
+import { Geist } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
 import QueryProvider from "@/providers/query-provider";
 
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-inter",
-  weight: ["400"],
-});
-
 const geist = Geist({
   subsets: ["latin"],
   variable: "--font-geist",
-});
-
-const dm_sans = DM_Sans({
-  subsets: ["latin"],
-  variable: "--font-dm-sans",
-});
-
-const ibm_plex_sans = IBM_Plex_Sans({
-  subsets: ["latin"],
-  variable: "--font-ibm-plex-sans",
-  weight: "400",
 });
 
 export const metadata: Metadata = {
@@ -54,7 +31,9 @@ export default function RootLayout({
             disableTransitionOnChange
           >
             <QueryProvider>
-              <main className={`${geist.className} ${geist.variable}`}>{children}</main>
+              <main className={`${geist.className} ${geist.variable}`}>
+                {children}
+              </main>
             </QueryProvider>
             <Toaster richColors position="bottom-center" />
           </ThemeProvider>

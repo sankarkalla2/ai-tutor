@@ -1,7 +1,5 @@
 import { streamText, UIMessage, convertToModelMessages } from "ai";
 import { gateway } from "@ai-sdk/gateway";
-import { db } from "@/lib/db";
-import { NextResponse } from "next/server";
 
 // Allow streaming responses up to 30 seconds
 export const maxDuration = 30;

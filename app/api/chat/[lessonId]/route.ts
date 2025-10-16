@@ -1,4 +1,4 @@
-import { getUserActiveSubscription } from "@/server/user";
+// import { getUserActiveSubscription } from "@/server/user";
 import { db } from "@/lib/db";
 import { lesson_QA_TutorPrompt } from "@/lib/prompts/lesson-prompt";
 import { openai } from "@ai-sdk/openai";
@@ -11,10 +11,10 @@ export async function POST(
   req: Request,
   { params }: { params: Promise<{ lessonId: string }> }
 ) {
-  const { messages, userId }: { messages: UIMessage[]; userId: string } =
+  const { messages }: { messages: UIMessage[]; userId: string } =
     await req.json();
-  const userSubscription = await getUserActiveSubscription();
-  console.log((await params).lessonId)
+  // const userSubscription = await getUserActiveSubscription();
+  // console.log((await params).lessonId)
 
   // if (!userSubscription) {
   //   return NextResponse.json(

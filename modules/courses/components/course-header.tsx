@@ -1,6 +1,5 @@
 "use client";
 
-import { useParams } from "next/navigation";
 import { useCourseViewId } from "../hooks/use-course-view-id";
 
 import {
@@ -8,12 +7,10 @@ import {
   BreadcrumbItem,
   BreadcrumbLink,
   BreadcrumbList,
-  BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import { Button } from "@/components/ui/button";
-import { Home, MessageCircle } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { Home,  } from "lucide-react";
 
 interface CourseHeaderProps {
   courseId: string;
@@ -21,11 +18,8 @@ interface CourseHeaderProps {
 const CourseHeader = ({ courseId }: CourseHeaderProps) => {
   const {
     data,
-    isLoading,
-    isError,
     totalLessons,
     completedLessons,
-    progressPercentage,
   } = useCourseViewId(courseId);
 
   if (!data?.course) return null;

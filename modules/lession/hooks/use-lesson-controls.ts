@@ -1,5 +1,4 @@
 import {
-  QueryClient,
   useMutation,
   useQueryClient,
 } from "@tanstack/react-query";
@@ -22,15 +21,6 @@ export const useLessonControls = (lessonId: string, courseId: string) => {
         queryKey: ["get-lesson-by-id", lessonId],
       });
 
-      // Get previous data for rollback
-      const prevLessonData = queryClient.getQueryData([
-        "get-lesson-by-id",
-        lessonId,
-      ]);
-      const prevCoursePreview = queryClient.getQueryData([
-        "get-course-preview",
-        courseId,
-      ]);
 
       queryClient.setQueriesData(
         { queryKey: ["get-course-preview", courseId] },
