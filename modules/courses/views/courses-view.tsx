@@ -1,12 +1,22 @@
-"use client";
 import Link from "next/link";
 import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 import GetUserCourses from "@/components/courses/get-user-courses";
 import { MobileSidebarToggleButton } from "@/components/mobile-sidebar-toggle-button";
+import {
+  dehydrate,
+  HydrationBoundary,
+  QueryClient,
+} from "@tanstack/react-query";
+import { getAllUserCourses } from "../server/courses";
 
 const CoursesView = () => {
+  const queryClient = new QueryClient();
+  void queryClient.prefetchQuery({
+    queryKey: ["get-all-user-courses"],
+    queryFn: async () => await getAllUserCourses(),
+  });
   return (
     <div className="min-h-screen py-8">
       <div className=" px-4">
@@ -30,7 +40,9 @@ const CoursesView = () => {
           </Button>
         </div>
 
-        <GetUserCourses />
+        <HydrationBoundary state={dehydrate(queryClient)}>
+          <GetUserCourses />
+        </HydrationBoundary>
       </div>
     </div>
   );
