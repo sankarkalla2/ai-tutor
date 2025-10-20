@@ -18,6 +18,15 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+
+import {
+  Item,
+  ItemActions,
+  ItemContent,
+  ItemDescription,
+  ItemMedia,
+  ItemTitle,
+} from "@/components/ui/item";
 import {
   SidebarMenuButton,
   SidebarMenuItem,
@@ -25,7 +34,6 @@ import {
 } from "@/components/ui/sidebar";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
-import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { DialogClose, DialogFooter } from "../ui/dialog";
@@ -48,6 +56,7 @@ import Spinner from "../spinner";
 import { getUserActiveSubscription } from "@/server/user";
 import { ModalProvider } from "../modal-provider";
 import { authClient } from "@/lib/auth-client";
+import { useRouter } from "next/navigation";
 
 interface NavUserProps {
   name: string;
@@ -61,6 +70,7 @@ export function NavUser({ name, email, avatar }: NavUserProps) {
   const [imgUrl] = useState("");
   const [_, setOpen] = useState(false);
   const [isPending, setIsPending] = useState(false);
+  const router = useRouter();
 
   const { data: userSubscription, isLoading } = useQuery({
     queryKey: ["get-user-subscription"],
@@ -191,59 +201,42 @@ export function NavUser({ name, email, avatar }: NavUserProps) {
                       <Spinner />
                     </div>
                   ) : (
-                    <Alert>
-                      <AlertTitle>
-                        <div className="flex items-center gap-2">
-                          <CreditCard /> Subscription Status
-                        </div>
-                      </AlertTitle>
-                      <AlertDescription className="w-full mt-5">
-                        <div className="flex items-center justify-between w-full">
-                          <div>
-                            <p className="text-sm text-muted-foreground">
-                              Current Plan
-                            </p>
-                            <p className="text-lg font-semibold flex items-center gap-2">
-                              {userSubscription ? "Pro" : "Free"}
-                              {userSubscription && (
-                                <Badge
-                                  variant="secondary"
-                                  className="bg-primary/10 text-primary"
-                                >
-                                  Active
-                                </Badge>
-                              )}
-                              {!userSubscription && (
-                                <Badge variant="outline">No Subscription</Badge>
-                              )}
-                            </p>
-                          </div>
-
-                          {!userSubscription && (
+                    <>
+                      <Item variant={"muted"}>
+                        <ItemMedia variant="icon">
+                          <CreditCard />
+                        </ItemMedia>
+                        <ItemContent>
+                          <ItemTitle>Subscription Status</ItemTitle>
+                          <ItemDescription>Current Plan</ItemDescription>
+                        </ItemContent>
+                        <ItemActions className="flex">
+                          <Badge
+                            size={"sm"}
+                            variant={userSubscription ? "success" : "warning"}
+                            appearance={"outline"}
+                          >
+                            {userSubscription ? "Pro plan" : "No Subscription"}
+                          </Badge>
+                          {!userSubscription ? (
                             <Button
-                              className="bg-primary hover:bg-primary/90 "
-                              asChild
+                              size={"sm"}
+                              onClick={() => authClient.customer.portal()}
                             >
-                              <Link href="/pricing">
-                                <Zap className="mr-2 h-4 w-4" />
-                                View Pricing
+                              <Settings />
+                              Manage Billing
+                            </Button>
+                          ) : (
+                            <Button asChild size={"sm"} variant={"primary"}>
+                              <Link href={"/pricing"}>
+                                <Zap />
+                                Pricing
                               </Link>
                             </Button>
                           )}
-                          {userSubscription && (
-                            <Button
-                              className="bg-primary hover:bg-primary/90"
-                              onClick={() => authClient.customer.portal()}
-                            >
-                              <>
-                                <Settings className="mr-2 h-4 w-4" />
-                                Manage Billing
-                              </>
-                            </Button>
-                          )}
-                        </div>
-                      </AlertDescription>
-                    </Alert>
+                        </ItemActions>
+                      </Item>
+                    </>
                   )}
                 </div>
               </div>
@@ -280,8 +273,13 @@ export function NavUser({ name, email, avatar }: NavUserProps) {
 
             <DropdownMenuItem
               onClick={() => {
-                authClient.signOut();
-                window.location.reload();
+                authClient.signOut({
+                  fetchOptions: {
+                    onSuccess: () => {
+                      router.push("/sign-in");
+                    },
+                  },
+                });
               }}
             >
               <LogOut />

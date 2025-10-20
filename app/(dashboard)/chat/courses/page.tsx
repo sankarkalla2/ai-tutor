@@ -57,7 +57,7 @@ const CoursesPage = () => {
                 className="cursor-pointer"
                 asChild
               >
-                <Link href={`/chat/courses/${course.id}`}>
+                <Link href={`/chat/courses/${course.id}`} prefetch>
                   <MessageSquareShare />
                 </Link>
               </Badge>

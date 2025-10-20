@@ -33,6 +33,7 @@ import UpgradeCard from "../upgrade-card";
 import UserFeedback from "../user-feedback";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Kbd, KbdGroup } from "../ui/kbd";
+import { TooltipProvider } from "../tooltip-provider";
 
 const sidebarItems = [
   {
@@ -70,13 +71,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     <Sidebar collapsible="icon" {...props} variant="sidebar">
       <SidebarHeader>
         <SidebarMenuButton size={"lg"} variant={"outline"} isActive>
-          
-          <Link href={"/new"}>
+          <Link href={"/new"} prefetch>
             <div className=" flex aspect-square size-8 items-center justify-center rounded-lg border-dashed">
               <BookOpen className="size-4" />
             </div>
           </Link>
-          <Link href={"/"}>
+          <Link href={"/"} prefetch>
             <div className="grid flex-1 text-left text-sm leading-tight">
               <span className="truncate font-medium">{"AI Tutor"}</span>
               <span className="truncate text-xs">{"Heaven for learning"}</span>
@@ -89,8 +89,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <SidebarGroup>
           <SidebarMenu>
             <SidebarMenuItem>
-              <SidebarMenuButton asChild>
-                <Link href={"/new"}>
+              <SidebarMenuButton asChild tooltip={'Create New Course'}>
+                <Link href={"/new"} prefetch>
                   <Plus />
                   Create New
                 </Link>
@@ -107,7 +107,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                   tooltip={item.tooltip}
                   isActive={pathname.startsWith(item.url)}
                 >
-                  <Link href={item.url}>
+                  <Link href={item.url} prefetch>
                     <item.icon />
                     {item.title}
                   </Link>
@@ -132,20 +132,22 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         {!open && !isMobile && (
           <SidebarMenu>
             <SidebarMenuItem>
-              <SidebarMenuButton
-                onClick={toggleSidebar}
-                tooltip={
-                  <div>
-                    {"Open Sidebar"}{" "}
-                    <KbdGroup>
-                      <Kbd>ctrl</Kbd>
-                      <Kbd>b</Kbd>
-                    </KbdGroup>
-                  </div>
+              <TooltipProvider
+                trigger={
+                  <SidebarMenuButton onClick={toggleSidebar}>
+                    <PanelRight />
+                  </SidebarMenuButton>
                 }
               >
-                <PanelRight />
-              </SidebarMenuButton>
+                <div className="text-xs gap-1 flex items-center">
+                  Open Sidebar
+                  <KbdGroup>
+                    <Kbd className="">Ctrl</Kbd>
+                    <span>+</span>
+                    <Kbd>B</Kbd>
+                  </KbdGroup>
+                </div>
+              </TooltipProvider>
             </SidebarMenuItem>
           </SidebarMenu>
         )}
@@ -172,7 +174,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 asChild
                 tooltip={"login"}
               >
-                <Link href={"/sign-in"}>
+                <Link href={"/sign-in"} prefetch>
                   <LogIn />
                   <span className="">Login</span>
                 </Link>

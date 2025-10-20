@@ -28,7 +28,7 @@ const UpgradeCard = () => {
           </li>
         </ul>
         <Button variant={'primary'} className="cursor-pointer" asChild>
-          <Link href={"/pricing"}>
+          <Link href={"/pricing"} prefetch>
             <Sparkles />
             Upgrade
           </Link>

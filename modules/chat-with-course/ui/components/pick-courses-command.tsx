@@ -69,7 +69,7 @@ export function PickCoursesCommand({ courseId }: PickCoursesCommandProps) {
                   } `}
                   asChild
                 >
-                  <Link href={`/chat/courses/${course.id}`}>
+                  <Link href={`/chat/courses/${course.id}`} prefetch>
                     <ArrowRight />
                     <span>{course.title}</span>
                   </Link>

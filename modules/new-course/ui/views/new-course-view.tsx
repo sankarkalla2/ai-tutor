@@ -14,6 +14,7 @@ import { useCreateCourse } from "../../hooks/use-create-course";
 import AiQuestionsChat from "../components/ai-questions-chat";
 import Loader from "@/components/loader";
 import GetUserCourses from "@/components/courses/get-user-courses";
+import { MobileSidebarToggleButton } from "@/components/mobile-sidebar-toggle-button";
 
 export const NewCoursePageView = () => {
   const {
@@ -40,8 +41,9 @@ export const NewCoursePageView = () => {
   } = useCreateCourse();
 
   return (
-    <div className="min-h-screen mx-auto p-4 md:px-8 space-y-8">
+    <div className="min-h-screen mx-auto p-4 md:px-8 md:space-y-8 space-y-4">
       {isPending && <Loader />}
+      <MobileSidebarToggleButton />
       <div className="max-w-2xl mx-auto pt-8">
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold mb-2">

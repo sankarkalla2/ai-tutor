@@ -45,6 +45,7 @@ import { Button } from "@/components/ui/button";
 import UserFeedback from "@/components/user-feedback";
 import { authClient } from "@/lib/auth-client";
 import { CourseSidebarLoading } from "./course-side-loading";
+import { TooltipProvider } from "@/components/tooltip-provider";
 
 export function CourseSidebar() {
   const pathname = usePathname();
@@ -71,12 +72,12 @@ export function CourseSidebar() {
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton size={"lg"} variant={"outline"}>
-              <Link href={"/"}>
+              <Link href={"/"} prefetch>
                 <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
                   <BookOpen className="size-4" />
                 </div>
               </Link>
-              <Link href={"/"}>
+              <Link href={"/"} prefetch>
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-medium">{"AI Tutor"}</span>
                   <span className="truncate text-xs">
@@ -190,19 +191,22 @@ export function CourseSidebar() {
         {!open && !isMobile && (
           <SidebarMenu>
             <SidebarMenuItem>
-              <SidebarMenuButton
-                onClick={toggleSidebar}
-                tooltip={
-                  <div>
-                    <KbdGroup>
-                      <Kbd>ctrl</Kbd>
-                      <Kbd>b</Kbd>
-                    </KbdGroup>
-                  </div>
+              <TooltipProvider
+                trigger={
+                  <SidebarMenuButton onClick={toggleSidebar}>
+                    <PanelRight />
+                  </SidebarMenuButton>
                 }
               >
-                <PanelRight />
-              </SidebarMenuButton>
+                <div className="text-xs gap-1 flex items-center">
+                  Open Sidebar
+                  <KbdGroup>
+                    <Kbd className="">Ctrl</Kbd>
+                    <span>+</span>
+                    <Kbd>B</Kbd>
+                  </KbdGroup>
+                </div>
+              </TooltipProvider>
             </SidebarMenuItem>
           </SidebarMenu>
         )}

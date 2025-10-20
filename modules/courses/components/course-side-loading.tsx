@@ -22,12 +22,12 @@ export const CourseSidebarLoading = () => {
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton size={"lg"} variant={"outline"}>
-              <Link href={"/"}>
+              <Link href={"/"} prefetch>
                 <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
                   <BookOpen className="size-4" />
                 </div>
               </Link>
-              <Link href={"/"}>
+              <Link href={"/"} prefetch>
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-medium">{"AI Tutor"}</span>
                   <span className="truncate text-xs">

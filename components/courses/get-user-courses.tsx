@@ -89,14 +89,14 @@ const GetUserCourses = () => {
 
                 <div className="flex gap-2 items-center">
                   <Button asChild size="sm" className="flex-1" variant={"mono"}>
-                    <Link href={`/course/${course.id}`}>
+                    <Link href={`/course/${course.id}`} prefetch>
                       <ExternalLink className="w-4 h-4 mr-2" />
                       View Course
                     </Link>
                   </Button>
 
                   <Button size="icon" variant="outline">
-                    <Link href={`/chat/courses/${course.id}`}>
+                    <Link href={`/chat/courses/${course.id}`} prefetch>
                       <MessageCircle className="w-4 h-4" />
                     </Link>
                   </Button>

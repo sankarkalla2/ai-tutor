@@ -7,7 +7,7 @@ const useSignIn = () => {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const searchParams = useSearchParams();
-  const redirectUrl = searchParams.get("redirectUrl") || "/dashboard";
+  const redirectUrl = searchParams.get("redirectUrl") || "/new";
 
   const signInWithMagicLink = async () => {
     if (!email) toast.error("Please enter your email address");
