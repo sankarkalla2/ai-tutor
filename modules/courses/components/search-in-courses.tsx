@@ -1,6 +1,6 @@
 "use client";
 import { Search } from "lucide-react";
-import { parseAsIndex, parseAsInteger, useQueryState } from "nuqs";
+
 
 import {
   InputGroup,

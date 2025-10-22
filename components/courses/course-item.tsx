@@ -6,10 +6,8 @@ import {
 } from "lucide-react";
 import {
   Item,
-  ItemActions,
   ItemContent,
   ItemDescription,
-  ItemHeader,
   ItemTitle,
 } from "../ui/item";
 import { Badge } from "../ui/badge";
