@@ -12,9 +12,9 @@ import {
   CommandList,
 } from "@/components/ui/command";
 import { useQuery } from "@tanstack/react-query";
-import { getAllUserCourses } from "@/modules/courses/server/courses";
 import Link from "next/link";
 import { Kbd, KbdGroup } from "@/components/ui/kbd";
+import { getUserCourses } from "@/server/courses";
 
 interface PickCoursesCommandProps {
   courseId: string;
@@ -23,7 +23,7 @@ export function PickCoursesCommand({ courseId }: PickCoursesCommandProps) {
   const [open, setOpen] = React.useState(false);
   const { data, isLoading } = useQuery({
     queryKey: ["get-all-user-courses"],
-    queryFn: () => getAllUserCourses(),
+    queryFn: async () => await getUserCourses(),
   });
 
   React.useEffect(() => {

@@ -4,6 +4,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
 import QueryProvider from "@/providers/query-provider";
+import { NuqsAdapter } from "nuqs/adapters/next/app";
 
 const geist = Geist({
   subsets: ["latin"],
@@ -31,9 +32,11 @@ export default function RootLayout({
             disableTransitionOnChange
           >
             <QueryProvider>
-              <main className={`${geist.className} ${geist.variable}`}>
-                {children}
-              </main>
+              <NuqsAdapter>
+                <main className={`${geist.className} ${geist.variable}`}>
+                  {children}
+                </main>
+              </NuqsAdapter>
             </QueryProvider>
             <Toaster richColors position="bottom-center" />
           </ThemeProvider>

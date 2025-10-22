@@ -2,109 +2,110 @@
 
 import { getAllUserCourses } from "@/modules/courses/server/courses";
 import { useQuery } from "@tanstack/react-query";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "../ui/card";
-import { BookOpen, Clock, ExternalLink, MessageCircle } from "lucide-react";
-import { Badge } from "../ui/badge";
-import { Button } from "../ui/button";
-import Link from "next/link";
 import { Skeleton } from "../ui/skeleton";
+import { SearchInCourses } from "@/modules/courses/components/search-in-courses";
+import { useCoursesParams } from "@/hooks/use-courses-params";
+import { usePathname } from "next/navigation";
+import CourseItem from "./course-item";
+import {
+  Empty,
+  EmptyContent,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from "../ui/empty";
+import { Button } from "../ui/button";
+import { FileQuestionIcon, PlusIcon } from "lucide-react";
+import Link from "next/link";
 
 const GetUserCourses = () => {
+  const [params] = useCoursesParams();
+  const pathname = usePathname();
+  const isCoursePage = pathname.includes("/courses");
   const { data, isLoading } = useQuery({
-    queryKey: ["get-all-user-courses"],
-    queryFn: () => getAllUserCourses(),
+    queryKey: ["get-all-user-courses", params],
+    queryFn: () => getAllUserCourses(params),
   });
 
   if (isLoading) {
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {[1, 2, 3, 4].map((key) => (
-          <Skeleton className="w-full h-52 p-4" key={key} />
+          <Skeleton className="w-full h-40 p-4" key={key} />
         ))}
       </div>
     );
   }
 
-  if (data?.courses?.length === 0)
-    return <h1 className="text-center text-2xl font-bold">No courses found</h1>;
+  if (data?.items?.courses.length === 0)
+    return (
+      <Empty>
+        <EmptyHeader>
+          <EmptyMedia variant="icon">
+            <FileQuestionIcon />
+          </EmptyMedia>
+          <EmptyTitle>No Courses Found</EmptyTitle>
+          <EmptyDescription>
+            No courses found. You can create a new one.
+          </EmptyDescription>
+        </EmptyHeader>
+        <EmptyContent>
+          <div className="flex gap-2">
+
+            <Button asChild>
+              <Link href={'/new'} prefetch>
+                <PlusIcon />
+                Create New
+              </Link>
+            </Button>
+          </div>
+        </EmptyContent>
+      </Empty>
+    );
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 ">
-      {data &&
-        data.courses?.map((course) => {
-          const completedLessons = course.modules.reduce((acc, module) => {
-            acc += module.lessons?.filter(
-              (lesson) => lesson.status === "COMPLETED"
-            ).length;
-            return acc;
-          }, 0);
+    <div className="space-y-4 w-full h-full">
+      {isCoursePage && (
+        <div className="max-w-sm">
+          <SearchInCourses totalCourses={data?.items?.courses?.length || 0} />
+        </div>
+      )}
 
-          const totalLessons = course.modules.reduce((acc, module) => {
-            acc += module.lessons?.length;
-            return acc;
-          }, 0);
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 ">
+        {data &&
+          data.items?.courses?.map((course) => {
+            const completedLessons = course.modules.reduce((acc, module) => {
+              acc += module.lessons?.filter(
+                (lesson) => lesson.status === "COMPLETED"
+              ).length;
+              return acc;
+            }, 0);
 
-          const progress = Math.round((completedLessons / totalLessons) * 100);
+            const totalLessons = course.modules.reduce((acc, module) => {
+              acc += module.lessons?.length;
+              return acc;
+            }, 0);
 
-          return (
-            <Card
-              className="border hover:shadow-md transition-shadow duration-200 cursor-pointer"
-              key={course.id}
-            >
-              <CardContent className="">
-                <CardHeader className="p-0 mb-4">
-                  <CardTitle className="text-lg font-medium mb-2">
-                    {course.title}
-                  </CardTitle>
-                  <CardDescription className="text-muted-foreground text-sm line-clamp-2">
-                    {course.description}
-                  </CardDescription>
-                </CardHeader>
+            const progress = Math.round(
+              (completedLessons / totalLessons) * 100
+            );
 
-                <div className="flex items-center justify-around text-sm text-gray-500 mb-4">
-                  <div className="flex items-center gap-1">
-                    <BookOpen className="w-4 h-4" />
-                    <span>{course._count.modules} modules</span>
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <Clock className="w-4 h-4" />
-                    <span>
-                      {course.modules.reduce(
-                        (acc, module) => acc + module.lessons.length,
-                        0
-                      )}{" "}
-                      lessons
-                    </span>
-                  </div>
-                  <Badge variant="secondary" className="text-xs">
-                    {progress}% complete
-                  </Badge>
-                </div>
+            const modules = course.modules.length;
 
-                <div className="flex gap-2 items-center">
-                  <Button asChild size="sm" className="flex-1" variant={"mono"}>
-                    <Link href={`/course/${course.id}`} prefetch>
-                      <ExternalLink className="w-4 h-4 mr-2" />
-                      View Course
-                    </Link>
-                  </Button>
-
-                  <Button size="icon" variant="outline">
-                    <Link href={`/chat/courses/${course.id}`} prefetch>
-                      <MessageCircle className="w-4 h-4" />
-                    </Link>
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          );
-        })}
+            return (
+              <CourseItem
+                key={course.id}
+                progress={progress}
+                modules={modules}
+                totalLessons={totalLessons}
+                title={course.title}
+                description={course.description}
+                id={course.id}
+              />
+            );
+          })}
+      </div>
     </div>
   );
 };

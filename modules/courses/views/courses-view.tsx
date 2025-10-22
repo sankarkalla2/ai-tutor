@@ -10,19 +10,27 @@ import {
   QueryClient,
 } from "@tanstack/react-query";
 import { getAllUserCourses } from "../server/courses";
+import type { SearchParams } from "nuqs/server";
+import { coursesParamsLoader } from "@/server/courses-params-loader";
+import { CoursePagination } from "../components/course-pagination";
 
-const CoursesView = () => {
+type Props = {
+  searchParams: Promise<SearchParams>;
+};
+
+const CoursesView = async ({ searchParams }: Props) => {
+  const params = await coursesParamsLoader(searchParams);
   const queryClient = new QueryClient();
   void queryClient.prefetchQuery({
-    queryKey: ["get-all-user-courses"],
-    queryFn: async () => await getAllUserCourses(),
+    queryKey: ["get-all-user-courses", params],
+    queryFn: async () => await getAllUserCourses(params),
   });
   return (
     <div className="min-h-screen py-8">
       <div className=" px-4">
         <MobileSidebarToggleButton />
       </div>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col min-h-[calc(100vh-4rem)]">
         <div className="mb-8 flex items-center justify-between">
           <div>
             <h1 className="text-3xl font-bold leading-relaxed">
@@ -32,7 +40,7 @@ const CoursesView = () => {
               Continue your learning journey and track your progress
             </p>
           </div>
-          <Button variant={"secondary"} asChild>
+          <Button asChild>
             <Link href={"/new"}>
               <Plus />
               <span className="">Create New</span>
@@ -41,7 +49,13 @@ const CoursesView = () => {
         </div>
 
         <HydrationBoundary state={dehydrate(queryClient)}>
-          <GetUserCourses />
+          <div className="flex-1 space-y-2">
+            
+            <GetUserCourses />
+          </div>
+          <div className="pb-8">
+            <CoursePagination />
+          </div>
         </HydrationBoundary>
       </div>
     </div>
