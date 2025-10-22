@@ -1,7 +1,12 @@
 import CoursesView from "@/modules/courses/views/courses-view";
+import { SearchParams } from "nuqs/server";
 
-const YourCoursesPage = () => {
-  return <CoursesView />;
+type Props = {
+  searchParams: Promise<SearchParams>;
+};
+
+const YourCoursesPage = ({searchParams}: Props) => {
+  return <CoursesView searchParams={searchParams} />;
 };
 
 export default YourCoursesPage;
