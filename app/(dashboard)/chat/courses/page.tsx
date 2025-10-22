@@ -1,10 +1,8 @@
 "use client";
-import Link from "next/link";
 
 import { useQuery } from "@tanstack/react-query";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import {
   Item,
   ItemActions,
@@ -14,10 +12,6 @@ import {
 } from "@/components/ui/item";
 import {
   ArrowLeft,
-  MessageSquareShare,
-  ChevronRightIcon,
-  ExternalLinkIcon,
-  MessagesSquareIcon,
   MessageSquareShareIcon,
 } from "lucide-react";
 
@@ -26,7 +20,7 @@ import { getAllUserCourses } from "@/modules/courses/server/courses";
 import { MobileSidebarToggleButton } from "@/components/mobile-sidebar-toggle-button";
 import ErrorPage from "@/components/error";
 import { useCoursesParams } from "@/hooks/use-courses-params";
-import { progressPercentage } from "motion/react";
+
 const CoursesPage = () => {
   const [params] = useCoursesParams();
   const { data, isLoading, isError } = useQuery({

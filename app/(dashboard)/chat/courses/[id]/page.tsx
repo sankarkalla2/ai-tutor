@@ -1,5 +1,5 @@
 import ChatWithCourseView from "@/modules/chat-with-course/ui/views/chat-course-view";
-import { getAllUserCourses } from "@/modules/courses/server/courses";
+import { getUserCourses } from "@/server/courses";
 import {
   dehydrate,
   HydrationBoundary,
@@ -10,7 +10,7 @@ const ChatWithCourse = () => {
   const queryClient = new QueryClient();
   void queryClient.prefetchQuery({
     queryKey: ["get-all-user-courses"],
-    queryFn: async () => await getAllUserCourses(),
+    queryFn: async () => await getUserCourses(),
   });
 
   return (
