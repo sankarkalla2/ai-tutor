@@ -22,7 +22,7 @@ interface PickCoursesCommandProps {
 export function PickCoursesCommand({ courseId }: PickCoursesCommandProps) {
   const [open, setOpen] = React.useState(false);
   const { data, isLoading } = useQuery({
-    queryKey: ["get-all-user-courses"],
+    queryKey: ["get-user-courses"],
     queryFn: async () => await getUserCourses(),
   });
 

@@ -1,10 +1,8 @@
 import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport } from "ai";
-import { useParams } from "next/navigation";
 import { useState } from "react";
 
 export const useChatWithCourse = (id: string) => {
-  const params = useParams<{ id: string }>();
   const [input, setInput] = useState("");
   const { messages, sendMessage, status } = useChat({
     transport: new DefaultChatTransport({
@@ -27,7 +25,7 @@ export const useChatWithCourse = (id: string) => {
         {
           body: {
             messages,
-            courseId: params.id,
+            courseId: id,
           },
         }
       );

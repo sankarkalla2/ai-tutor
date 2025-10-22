@@ -9,7 +9,7 @@ import {
 const ChatWithCourse = () => {
   const queryClient = new QueryClient();
   void queryClient.prefetchQuery({
-    queryKey: ["get-all-user-courses"],
+    queryKey: ["get-user-courses"],
     queryFn: async () => await getUserCourses(),
   });
 

@@ -40,7 +40,7 @@ const CoursesView = async ({ searchParams }: Props) => {
               Continue your learning journey and track your progress
             </p>
           </div>
-          <Button asChild>
+          <Button variant={"secondary"} asChild>
             <Link href={"/new"}>
               <Plus />
               <span className="">Create New</span>
@@ -50,7 +50,6 @@ const CoursesView = async ({ searchParams }: Props) => {
 
         <HydrationBoundary state={dehydrate(queryClient)}>
           <div className="flex-1 space-y-2">
-            
             <GetUserCourses />
           </div>
           <div className="pb-8">
