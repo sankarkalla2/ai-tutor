@@ -1,4 +1,4 @@
-import ChatWithCourseView from "@/modules/chat-with-course/ui/views/chat-course-view";
+import ChatWithCourseIdView from "@/modules/chat-with-course/ui/views/chat-with-course-view-id";
 import { getUserCourses } from "@/server/courses";
 import {
   dehydrate,
@@ -15,7 +15,7 @@ const ChatWithCourse = () => {
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <ChatWithCourseView />
+      <ChatWithCourseIdView />
     </HydrationBoundary>
   );
 };

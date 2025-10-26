@@ -22,7 +22,7 @@ const CoursesView = async ({ searchParams }: Props) => {
   const params = await coursesParamsLoader(searchParams);
   const queryClient = new QueryClient();
   void queryClient.prefetchQuery({
-    queryKey: ["get-all-user-courses", params],
+    queryKey: ["get-user-courses-by-params", params],
     queryFn: async () => await getAllUserCourses(params),
   });
   return (

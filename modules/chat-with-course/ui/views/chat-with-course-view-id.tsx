@@ -33,9 +33,9 @@ import { Suggestion, Suggestions } from "@/components/ai-elements/suggestion";
 
 import { PickCoursesCommand } from "@/modules/chat-with-course/ui/components/pick-courses-command";
 import { MobileSidebarToggleButton } from "@/components/mobile-sidebar-toggle-button";
-import { useChatWithCourse } from "../../hooks/use-chat-with-course";
+import { useChatWithCourse } from "../../hooks/use-chat-with-course-id";
 
-const ChatWithCourseView = () => {
+const ChatWithCourseIdView = () => {
   const { id } = useParams<{ id: string }>();
   const {
     suggestions,
@@ -166,4 +166,4 @@ const ChatWithCourseView = () => {
   );
 };
 
-export default ChatWithCourseView;
+export default ChatWithCourseIdView;

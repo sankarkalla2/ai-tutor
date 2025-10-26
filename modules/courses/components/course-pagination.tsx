@@ -8,7 +8,7 @@ import { ArrowLeft, ArrowRight } from "lucide-react";
 export const CoursePagination = () => {
   const [params, setParams] = useCoursesParams();
   const { data, isLoading } = useQuery({
-    queryKey: ["get-all-user-courses", params],
+    queryKey: ["get-user-courses-by-params", params],
     queryFn: () => getAllUserCourses(params),
   });
 

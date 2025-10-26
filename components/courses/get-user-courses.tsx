@@ -24,7 +24,7 @@ const GetUserCourses = () => {
   const pathname = usePathname();
   const isCoursePage = pathname.includes("/courses");
   const { data, isLoading } = useQuery({
-    queryKey: ["get-all-user-courses", params],
+    queryKey: ["get-user-courses-by-params", params],
     queryFn: () => getAllUserCourses(params),
   });
 
@@ -52,9 +52,8 @@ const GetUserCourses = () => {
         </EmptyHeader>
         <EmptyContent>
           <div className="flex gap-2">
-
             <Button asChild>
-              <Link href={'/new'} prefetch>
+              <Link href={"/new"} prefetch>
                 <PlusIcon />
                 Create New
               </Link>
