@@ -10,9 +10,11 @@ export const MobileSidebarToggleButton = () => {
   return (
     <>
       {isMobile && (
-        <Button className="" variant={"outline"} onClick={toggleSidebar}>
-          <PanelRight />
-        </Button>
+        <div className="p-4">
+          <Button className="" variant={"outline"} onClick={toggleSidebar}>
+            <PanelRight />
+          </Button>
+        </div>
       )}
     </>
   );

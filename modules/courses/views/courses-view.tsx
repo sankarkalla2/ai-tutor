@@ -3,7 +3,6 @@ import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 import GetUserCourses from "@/components/courses/get-user-courses";
-import { MobileSidebarToggleButton } from "@/components/mobile-sidebar-toggle-button";
 import {
   dehydrate,
   HydrationBoundary,
@@ -26,10 +25,7 @@ const CoursesView = async ({ searchParams }: Props) => {
     queryFn: async () => await getAllUserCourses(params),
   });
   return (
-    <div className="min-h-screen py-8">
-      <div className=" px-4">
-        <MobileSidebarToggleButton />
-      </div>
+    <div className="min-h-screen md:py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col min-h-[calc(100vh-4rem)]">
         <div className="mb-8 flex items-center justify-between">
           <div>

@@ -32,7 +32,6 @@ import { Loader } from "@/components/ai-elements/loader";
 import { Suggestion, Suggestions } from "@/components/ai-elements/suggestion";
 
 import { PickCoursesCommand } from "@/modules/chat-with-course/ui/components/pick-courses-command";
-import { MobileSidebarToggleButton } from "@/components/mobile-sidebar-toggle-button";
 import { useChatWithCourse } from "../../hooks/use-chat-with-course-id";
 
 const ChatWithCourseIdView = () => {
@@ -44,14 +43,13 @@ const ChatWithCourseIdView = () => {
     status,
     handleSubmit,
     handleSuggestionClick,
-    setInput
+    setInput,
   } = useChatWithCourse(id);
   return (
     <div className="max-w-4xl mx-auto p-4 md:px-6 md:pb-10 relative size-full h-screen">
       <div className="flex items-center justify-between">
         <div>
           <div className="flex items-center gap-2">
-            <MobileSidebarToggleButton />
             <Button className="md:hidden" size={"sm"} variant={"outline"}>
               <ArrowLeft />
               Home
@@ -155,9 +153,7 @@ const ChatWithCourseIdView = () => {
             className="rounded-md"
           />
           <PromptInputToolbar>
-            <PromptInputTools>
-              
-            </PromptInputTools>
+            <PromptInputTools></PromptInputTools>
             <PromptInputSubmit disabled={!input} status={status} />
           </PromptInputToolbar>
         </PromptInput>

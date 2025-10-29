@@ -4,6 +4,7 @@ import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { polarClient } from "@/lib/polar";
 import { headers } from "next/headers";
+import { redirect } from "next/navigation";
 
 export const getAllPlans = async () => {
   const products = await polarClient.products.list({
@@ -12,11 +13,8 @@ export const getAllPlans = async () => {
     sorting: ["price_amount"],
   });
 
-
   return products.result.items;
 };
-
-
 
 export const getUserActiveSubscription = async () => {
   const session = await auth.api.getSession({
@@ -39,7 +37,7 @@ export const updateUserProfile = async (name?: string, imgUrl?: string) => {
   if (!session?.user) {
     return { status: 401, message: "Access Denied" };
   }
-  console.log("name",name)
+  console.log("name", name);
 
   try {
     await auth.api.updateUser({
@@ -68,5 +66,23 @@ export const storeFeedback = async (feedback: string, email?: string) => {
     return { status: 200, message: "Thank you" };
   } catch (error) {
     return { status: 500, message: "Intervel server error" };
+  }
+};
+
+export const redirectUnauthrizedUser = async () => {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+  if (!session) {
+    return redirect("/sign-in");
+  }
+};
+
+export const redirectAuthrizedUser = async () => {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+  if (session) {
+    return redirect("/new");
   }
 };

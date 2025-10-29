@@ -6,18 +6,9 @@ import { Skeleton } from "../ui/skeleton";
 import { SearchInCourses } from "@/modules/courses/components/search-in-courses";
 import { useCoursesParams } from "@/hooks/use-courses-params";
 import { usePathname } from "next/navigation";
+
 import CourseItem from "./course-item";
-import {
-  Empty,
-  EmptyContent,
-  EmptyDescription,
-  EmptyHeader,
-  EmptyMedia,
-  EmptyTitle,
-} from "../ui/empty";
-import { Button } from "../ui/button";
-import { FileQuestionIcon, PlusIcon } from "lucide-react";
-import Link from "next/link";
+import NoCoursesFoundPage from "./no-courses-page";
 
 const GetUserCourses = () => {
   const [params] = useCoursesParams();
@@ -40,27 +31,7 @@ const GetUserCourses = () => {
 
   if (data?.items?.courses.length === 0)
     return (
-      <Empty>
-        <EmptyHeader>
-          <EmptyMedia variant="icon">
-            <FileQuestionIcon />
-          </EmptyMedia>
-          <EmptyTitle>No Courses Found</EmptyTitle>
-          <EmptyDescription>
-            No courses found. You can create a new one.
-          </EmptyDescription>
-        </EmptyHeader>
-        <EmptyContent>
-          <div className="flex gap-2">
-            <Button asChild>
-              <Link href={"/new"} prefetch>
-                <PlusIcon />
-                Create New
-              </Link>
-            </Button>
-          </div>
-        </EmptyContent>
-      </Empty>
+      <NoCoursesFoundPage />
     );
 
   return (

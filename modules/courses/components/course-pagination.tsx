@@ -4,6 +4,7 @@ import { useCoursesParams } from "@/hooks/use-courses-params";
 import { useQuery } from "@tanstack/react-query";
 import { getAllUserCourses } from "../server/courses";
 import { ArrowLeft, ArrowRight } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 export const CoursePagination = () => {
   const [params, setParams] = useCoursesParams();
@@ -16,7 +17,12 @@ export const CoursePagination = () => {
   const hasNextPage = data?.items?.hasNextPage ?? false;
 
   return (
-    <div className="w-full flex items-center justify-between my-auto">
+    <div
+      className={cn(
+        "w-full flex items-center justify-between my-auto",
+        data?.items?.courses.length === 0 && "hidden"
+      )}
+    >
       <Button
         disabled={isLoading || !hasPrevPage}
         size={"sm"}

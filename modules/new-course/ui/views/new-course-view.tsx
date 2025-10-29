@@ -43,7 +43,6 @@ export const NewCoursePageView = () => {
   return (
     <div className="min-h-screen mx-auto p-4 md:px-8 md:space-y-8 space-y-4">
       {isPending && <Loader />}
-      <MobileSidebarToggleButton />
       <div className="max-w-2xl mx-auto pt-8">
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold mb-2">

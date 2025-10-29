@@ -31,14 +31,12 @@ import { Suggestions } from "@/components/ai-elements/suggestion";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
-  ArrowLeft,
   Book,
   Brain,
   BriefcaseBusiness,
   File,
   GraduationCap,
 } from "lucide-react";
-import { MobileSidebarToggleButton } from "@/components/mobile-sidebar-toggle-button";
 import { ModalProvider } from "@/components/modal-provider";
 import TellAboutYourSelfForm from "@/modules/ask-tutor/ui/components/tell-about-self-form";
 import { askAiTutor } from "../../hooks/use-ask-ai-tutor";
@@ -60,20 +58,8 @@ const AskTutorView = () => {
     status,
   } = askAiTutor();
   return (
-    <div className="max-w-4xl mx-auto p-4 md:px-6 md:pb-10 relative size-full h-screen">
-      <div className="flex items-center justify-between">
-        <div>
-          <div className="flex items-center gap-2">
-            <MobileSidebarToggleButton />
-            <Button className="md:hidden" size={"sm"} variant={"outline"}>
-              <ArrowLeft />
-              Home
-            </Button>
-          </div>
-        </div>
-      </div>
-
-      <div className="flex flex-col h-full">
+    <div className="max-w-4xl mx-auto p-4 md:px-6 md:pb-10 relative size-full overflow-hidden devide-y h-[90vh] md:h-screen">
+      <div className="flex flex-col h-full justify-end">
         <ModalProvider
           open={open}
           onOpenChange={() => {
@@ -91,7 +77,7 @@ const AskTutorView = () => {
                   defaultValue="learn"
                   className="w-full text-sm text-muted-foreground"
                 >
-                  <TabsList size="sm" variant="default" shape={"default"}>
+                  <TabsList size="sm" variant="default" shape={"default"} className="overflow-y-auto">
                     <TabsTrigger
                       value="learn"
                       onClick={() => onSelectTrigger("learn")}

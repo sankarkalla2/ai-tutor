@@ -14,9 +14,9 @@ import { ArrowLeft, MessageSquareShareIcon } from "lucide-react";
 
 import Loader from "@/components/loader";
 import { getAllUserCourses } from "@/modules/courses/server/courses";
-import { MobileSidebarToggleButton } from "@/components/mobile-sidebar-toggle-button";
 import ErrorPage from "@/components/error";
 import { useCoursesParams } from "@/hooks/use-courses-params";
+import NoCoursesFoundPage from "@/components/courses/no-courses-page";
 
 const ChatCoursesPagesView = () => {
   const [params] = useCoursesParams();
@@ -36,18 +36,17 @@ const ChatCoursesPagesView = () => {
     );
   }
 
-  if (!data?.items) {
+  if (!data?.items?.courses.length) {
     return (
-      <p className="text-center text-sm text-muted-foreground h-full pt-[40vh]">
-        No courses found
-      </p>
+      <div className="text-center text-sm text-muted-foreground h-full pt-[20vh]">
+        <NoCoursesFoundPage />
+      </div>
     );
   }
 
   return (
     <div className="mx-auto max-w-5xl p-4">
       <div>
-        <MobileSidebarToggleButton />
         <Button variant={"primary"} size={"sm"}>
           <ArrowLeft />
           Back to Dashboard
@@ -112,4 +111,4 @@ const ChatCoursesPagesView = () => {
   );
 };
 
-export default ChatCoursesPagesView
+export default ChatCoursesPagesView;
