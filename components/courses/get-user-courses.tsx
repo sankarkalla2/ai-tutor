@@ -16,7 +16,7 @@ const GetUserCourses = () => {
   const isCoursePage = pathname.includes("/courses");
   const { data, isLoading } = useQuery({
     queryKey: ["get-user-courses-by-params", params],
-    queryFn: () => getAllUserCourses(params),
+    queryFn: async () => await getAllUserCourses(params),
   });
 
   if (isLoading) {
@@ -29,10 +29,7 @@ const GetUserCourses = () => {
     );
   }
 
-  if (data?.items?.courses.length === 0)
-    return (
-      <NoCoursesFoundPage />
-    );
+  if (data?.items?.courses.length === 0) return <NoCoursesFoundPage />;
 
   return (
     <div className="space-y-4 w-full h-full">

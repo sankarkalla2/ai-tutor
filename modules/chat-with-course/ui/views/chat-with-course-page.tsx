@@ -22,7 +22,7 @@ const ChatCoursesPagesView = () => {
   const [params] = useCoursesParams();
   const { data, isLoading, isError } = useQuery({
     queryKey: ["get-user-courses-by-params", params],
-    queryFn: () => getAllUserCourses(params),
+    queryFn: async() => await getAllUserCourses(params),
   });
 
   if (isLoading) {
