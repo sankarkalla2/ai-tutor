@@ -218,7 +218,7 @@ export function NavUser({ name, email, avatar }: NavUserProps) {
                           >
                             {userSubscription ? "Pro plan" : "No Subscription"}
                           </Badge>
-                          {!userSubscription ? (
+                          {userSubscription ? (
                             <Button
                               size={"sm"}
                               onClick={() => authClient.customer.portal()}

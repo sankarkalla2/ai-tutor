@@ -14,7 +14,7 @@ import { useCreateCourse } from "../../hooks/use-create-course";
 import AiQuestionsChat from "../components/ai-questions-chat";
 import Loader from "@/components/loader";
 import GetUserCourses from "@/components/courses/get-user-courses";
-import { MobileSidebarToggleButton } from "@/components/mobile-sidebar-toggle-button";
+
 
 export const NewCoursePageView = () => {
   const {
